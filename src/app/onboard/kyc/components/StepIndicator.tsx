@@ -1,12 +1,12 @@
+import { getOnboardingSteps } from "../context/KYCContext";
+
 interface StepIndicatorProps {
     currentStep: number;
-    steps: Array<{
-        title: string;
-        description: string;
-    }>;
 }
 
-export function StepIndicator({ currentStep, steps }: StepIndicatorProps) {
+export function StepIndicator({ currentStep }: StepIndicatorProps) {
+    const steps = getOnboardingSteps();
+
     return (
         <div className="mb-8">
             <div className="flex justify-between">
