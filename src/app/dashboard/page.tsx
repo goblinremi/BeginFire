@@ -1,14 +1,6 @@
-import { redirect } from "next/navigation";
+import { withAuth } from "@/components/withAuth";
+import { User } from "@supabase/supabase-js";
 
-import { createClient } from "@/utils/supabase/server";
-
-export default async function DashboardPage() {
-    const supabase = await createClient();
-
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data?.user) {
-        redirect("/login");
-    }
-
-    return <p>Hello {data.user.email}</p>;
-}
+export default withAuth(function DashboardPage({ user }: { user: User }) {
+    return <p>Hello {user.email}</p>;
+});
