@@ -29,18 +29,21 @@ export default {
                     DEFAULT: "hsl(var(--popover))",
                     foreground: "hsl(var(--popover-foreground))",
                 },
+                // from figma
                 primary: {
-                    DEFAULT: "#2563eb", // Blue-600
-                    50: "#eff6ff",
-                    100: "#dbeafe",
-                    200: "#bfdbfe",
-                    300: "#93c5fd",
-                    400: "#60a5fa",
-                    500: "#3b82f6",
-                    600: "#2563eb",
-                    700: "#1d4ed8",
-                    800: "#1e40af",
-                    900: "#1e3a8a",
+                    DEFAULT: "#707070",
+                    light: "#F9FFE7",
+                    middle: "#B7E736",
+                    dark: "#707070",
+                },
+                neutral: {
+                    DEFAULT: "#B7E736",
+                    light: "#ACACAC",
+                    middle: "#808080",
+                    dark: "#A1D510",
+                },
+                offwhite: {
+                    DEFAULT: "#EDEDED",
                 },
                 secondary: {
                     DEFAULT: "#64748b", // Slate-500
