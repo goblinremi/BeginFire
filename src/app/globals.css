@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@config "../../tailwind.config.ts"
 
 body {
     font-family: Arial, Helvetica, sans-serif;
@@ -61,11 +60,14 @@ body {
     }
 }
 
-/* @layer base {
-    * {
-        @apply border-border;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
-} */
+@theme {
+    --color-primary: #a1d510;
+    --color-primary-light: #f9ffe7;
+    --color-primary-middle: #b7e736;
+    --color-primary-dark: #a1d510;
+    --color-neutral: #707070;
+    --color-neutral-light: #acacac;
+    --color-neutral-middle: #808080;
+    --color-neutral-dark: #707070;
+    --color-offwhite: #ededed;
+}

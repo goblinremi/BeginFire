@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-
+// TODO: CHANGE THESE TO GLOBAL THEME VARIABLES
 export default {
     darkMode: ["class"],
     content: [
@@ -28,22 +28,6 @@ export default {
                 popover: {
                     DEFAULT: "hsl(var(--popover))",
                     foreground: "hsl(var(--popover-foreground))",
-                },
-                // from figma
-                primary: {
-                    DEFAULT: "#707070",
-                    light: "#F9FFE7",
-                    middle: "#B7E736",
-                    dark: "#707070",
-                },
-                neutral: {
-                    DEFAULT: "#B7E736",
-                    light: "#ACACAC",
-                    middle: "#808080",
-                    dark: "#A1D510",
-                },
-                offwhite: {
-                    DEFAULT: "#EDEDED",
                 },
                 secondary: {
                     DEFAULT: "#64748b", // Slate-500
