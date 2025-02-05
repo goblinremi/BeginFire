@@ -70,4 +70,6 @@ body {
     --color-neutral-middle: #808080;
     --color-neutral-dark: #707070;
     --color-offwhite: #ededed;
+    --color-placeholder: #acacac;
+    --color-error: #ef6f6f;
 }
