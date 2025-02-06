@@ -39,14 +39,23 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && !request.nextUrl.pathname.startsWith("/auth")) {
+    console.log("request.nextUrl.pathname", request.nextUrl.pathname);
+    if (
+        !user &&
+        !request.nextUrl.pathname.startsWith("/auth/login") &&
+        !request.nextUrl.pathname.startsWith("/auth/email-not-confirmed") &&
+        !request.nextUrl.pathname.startsWith("/auth/signup") &&
+        !request.nextUrl.pathname.startsWith("/api/auth/confirm")
+    ) {
         // no user, potentially respond by redirecting the user to the login page
+        console.log("REDIRECTING TO LOGIN BECAUSE USER IS NOT LOGGED IN");
         const url = request.nextUrl.clone();
         url.pathname = "/auth/login";
         return NextResponse.redirect(url);
     }
     // if user is logged in and on login or signup page, redirect to dashboard
     if (user && request.nextUrl.pathname.startsWith("/auth")) {
+        console.log("REDIRECTING TO DASHBOARD BECAUSE USER IS LOGGED IN");
         const url = request.nextUrl.clone();
         url.pathname = "/dashboard";
         return NextResponse.redirect(url);
