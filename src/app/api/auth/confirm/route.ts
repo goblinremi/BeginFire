@@ -18,12 +18,21 @@ export async function GET(request: NextRequest) {
             type,
             token_hash,
         });
+
         if (!error) {
             console.log("NO ERROR");
             // redirect user to specified redirect URL or root of app
             //TODO: after confirming email, set user metadata as onboarding in progress
-
-            redirect(next);
+            const { data } = await supabase.auth.getUser();
+            if (data.user) {
+                await supabase.from("profiles").insert({
+                    id: data.user.id, // Use user's Supabase UUID
+                    onboarding_status: "IN_PROGRESS",
+                });
+                redirect(next);
+            } else {
+                console.log("NO USER DATA");
+            }
         }
         console.log("ERROR from email confirmation", error);
     }

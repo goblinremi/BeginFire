@@ -53,12 +53,28 @@ export async function updateSession(request: NextRequest) {
         url.pathname = "/auth/login";
         return NextResponse.redirect(url);
     }
-    // if user is logged in and on login or signup page, redirect to dashboard
-    if (user && request.nextUrl.pathname.startsWith("/auth")) {
-        console.log("REDIRECTING TO DASHBOARD BECAUSE USER IS LOGGED IN");
-        const url = request.nextUrl.clone();
-        url.pathname = "/dashboard";
-        return NextResponse.redirect(url);
+    if (user) {
+        const { data: profile } = await supabase
+            .from("profile")
+            .select("onboarding_status")
+            .eq("id", user?.id)
+            .single();
+        // If user is logged in and onboarding is in progress, redirect to onboarding page
+        if (
+            profile?.onboarding_status === "IN_PROGRESS" &&
+            !request.nextUrl.pathname.startsWith("/onboard")
+        ) {
+            const url = request.nextUrl.clone();
+            url.pathname = "/onboard/kyc/identity";
+            return NextResponse.redirect(url);
+        }
+        // if user is logged in and not in onboarding, and is on login or signup page, redirect to dashboard
+        if (request.nextUrl.pathname.startsWith("/auth")) {
+            console.log("REDIRECTING TO DASHBOARD BECAUSE USER IS LOGGED IN");
+            const url = request.nextUrl.clone();
+            url.pathname = "/dashboard";
+            return NextResponse.redirect(url);
+        }
     }
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is.

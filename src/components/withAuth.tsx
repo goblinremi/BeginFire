@@ -11,6 +11,16 @@ export function withAuth<P extends object>(
         if (error || !data?.user) {
             redirect("/auth/login");
         }
+        const { data: profile } = await supabase
+            .from("profiles")
+            .select("onboarding_status")
+            .eq("id", data.user.id)
+            .single();
+
+        if (profile?.onboarding_status === "IN_PROGRESS") {
+            redirect("/onboard/kyc/identity"); // 🚀 Redirect to onboarding page
+            //TODO: save onboarding step?
+        }
 
         return <WrappedComponent {...props} user={data.user} />;
     };
