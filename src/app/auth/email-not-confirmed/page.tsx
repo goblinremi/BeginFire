@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "../actions";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
+import SubmitEmailButton from "./SubmitEmailButton";
+
 export default async function EmailNotConfirmedPage() {
     return (
         <div className="flex flex-col justify-center h-full">
@@ -15,13 +16,22 @@ export default async function EmailNotConfirmedPage() {
                     Please check your email for a verification link.
                 </p>
             </div>
-
-            <Button
-                size="lg"
-                className="mt-4 w-full bg-primary hover:bg-primary-600"
-            >
-                Resend verification email
-            </Button>
+            <form>
+                <div className="flex gap-y-2 flex-col">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        required
+                        className="w-full"
+                    />
+                    {/* <p className="text-xs text-placeholder">Supporting text</p> */}
+                </div>
+                <SubmitEmailButton />
+                {/* todo add sent state using useActionState */}
+            </form>
             <p className="w-full text-center font-medium mt-4 text-neutral">
                 Need help?{" "}
                 <Link href="/contact">

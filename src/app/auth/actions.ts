@@ -62,3 +62,18 @@ export async function signout() {
     }
     redirect("/auth/login");
 }
+
+export async function resendEmailVerification(formData: FormData) {
+    const supabase = await createClient();
+    const email = formData.get("email") as string;
+    const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+        options: {
+            emailRedirectTo: "http://localhost:3000/dashboard",
+        },
+    });
+    if (error) {
+        console.log("ERROR FROM RESEND EMAIL VERIFICATION IS", error);
+    }
+}
