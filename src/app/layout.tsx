@@ -27,8 +27,9 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <div className="h-screen max-w-full p-4 overflow-y-scroll">
-                    {children}
+                <div className="h-screen flex justify-center items-center max-w-full p-4 overflow-y-scroll">
+                    <div className="md:w-[600px] w-full">{children}</div>
+                    {/* temp for mobile force to desktop */}
                 </div>
             </body>
         </html>

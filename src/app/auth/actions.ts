@@ -18,11 +18,19 @@ export async function login(formData: FormData) {
     const { error } = await supabase.auth.signInWithPassword(data);
 
     if (error) {
-        redirect("/error");
+        console.log("ERROR FROM LOGIN IS", error);
+        switch (error.code) {
+            case "email_not_confirmed":
+                redirect("/auth/email-not-confirmed");
+            case "invalid_credentials":
+                redirect("/error");
+            default:
+                redirect("/error");
+        }
     }
 
     revalidatePath("/", "layout");
-    redirect("/");
+    redirect("/dashboard");
 }
 
 export async function signup(formData: FormData) {
@@ -41,6 +49,16 @@ export async function signup(formData: FormData) {
         redirect("/error");
     }
 
-    revalidatePath("/", "layout");
-    redirect("/");
+    redirect("/auth/email-not-confirmed");
+    //revalidatePath("/", "layout");
+    // redirect("/");
+}
+
+export async function signout() {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.log("ERROR FROM SIGN OUT IS", error);
+    }
+    redirect("/auth/login");
 }

@@ -1,19 +1,17 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import type { ReactNode } from "react";
-import { User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
 
-export async function withAuth(
-    Component: (props: { user: User }) => ReactNode
+export function withAuth<P extends object>(
+    WrappedComponent: React.ComponentType<P>
 ) {
-    return async function ProtectedPage() {
+    return async function AuthenticatedComponent(props: P) {
         const supabase = await createClient();
 
         const { data, error } = await supabase.auth.getUser();
         if (error || !data?.user) {
-            redirect("/login");
+            redirect("/auth/login");
         }
 
-        return <Component user={data.user} />;
+        return <WrappedComponent {...props} user={data.user} />;
     };
 }
