@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { signup } from "../actions";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
-export default async function SignupPage() {
+export default function SignupPage() {
     // don't need redirect after login here because the user should be redirected to the onboarding page after email verification
     // or by default to root in auth/actions.ts
     return (

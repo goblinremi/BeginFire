@@ -77,3 +77,116 @@ export async function resendEmailVerification(formData: FormData) {
         console.log("ERROR FROM RESEND EMAIL VERIFICATION IS", error);
     }
 }
+
+export async function enrollMFA() {
+    const supabase = await createClient();
+
+    // First check if user already has MFA enrolled
+    const { data: factors, error: listError } =
+        await supabase.auth.mfa.listFactors();
+
+    if (listError) {
+        throw listError;
+    }
+    // If user already has TOTP factor, unenroll it
+    // Is this necessary? Don't know how to retrieve the existing factor QR code
+    const existingFactor = factors.totp[0];
+    if (existingFactor) {
+        const { error: unenrollError } = await supabase.auth.mfa.unenroll({
+            factorId: existingFactor.id,
+        });
+        if (unenrollError) throw unenrollError;
+    }
+
+    // create new one
+    const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: "totp",
+        issuer: "BeginFire",
+        friendlyName: "Test123 2FA",
+    });
+
+    if (error) {
+        console.log("ERROR FROM ENROLL MFA IS", error);
+        throw error;
+    }
+
+    return {
+        factorId: data.id,
+        qrCode: data.totp.qr_code,
+    };
+}
+export async function unenrollMFA(factorId: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.mfa.unenroll({
+        factorId,
+    });
+
+    if (error) {
+        throw error;
+    }
+
+    return {
+        success: true,
+    };
+}
+
+export async function challengeMFA(factorId: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.mfa.challenge({
+        factorId,
+    });
+
+    if (error) {
+        throw error;
+    }
+
+    return {
+        challengeId: data.id,
+    };
+}
+
+export async function verifyMFA({
+    factorId,
+    challengeId,
+    code,
+}: {
+    factorId: string;
+    challengeId: string;
+    code: string;
+}) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.mfa.verify({
+        factorId,
+        challengeId,
+        code,
+    });
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
+export async function listMFAFactors() {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.mfa.listFactors();
+
+    if (error) {
+        throw error;
+    }
+
+    const totpFactor = data.totp[0];
+    if (!totpFactor) {
+        throw new Error("No TOTP factors found!");
+    }
+
+    return {
+        factorId: totpFactor.id,
+        verified: totpFactor.status === "verified",
+    };
+}

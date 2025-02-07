@@ -6,7 +6,7 @@ import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
 import SubmitEmailButton from "./SubmitEmailButton";
 
-export default async function EmailNotConfirmedPage() {
+export default function EmailNotConfirmedPage() {
     return (
         <div className="flex flex-col justify-center h-full">
             <Icons.starBox className="w-12 mb-6 h-12 text-primary" />
