@@ -61,7 +61,9 @@ body {
 }
 
 @theme {
+    --color-primary-superlight: #f9fbf5;
     --color-primary: #a1d510;
+    --color-primary-neon: #c8f432;
     --color-primary-light: #f9ffe7;
     --color-primary-middle: #b7e736;
     --color-primary-dark: #a1d510;

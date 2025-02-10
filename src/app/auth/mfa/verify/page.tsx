@@ -1,4 +1,4 @@
-import VerifyMFA from "../../components/VerifyMFA";
+import VerifyMFA from "../../components/mfa/VerifyMFA";
 import { Icons } from "@/components/ui/icons";
 
 export default function VerifyMFAPage() {

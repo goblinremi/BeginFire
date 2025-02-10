@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { challengeMFA, verifyMFA, listMFAFactors } from "../actions";
+import { challengeMFA, verifyMFA, listMFAFactors } from "../../actions";
 import { redirect } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import {

@@ -88,6 +88,7 @@ export async function enrollMFA() {
     if (listError) {
         throw listError;
     }
+    console.log("FACTORS FROM ENROLL MFA IS", JSON.stringify(factors));
     // If user already has TOTP factor, unenroll it
     // Is this necessary? Don't know how to retrieve the existing factor QR code
     const existingFactor = factors.totp[0];
@@ -101,8 +102,8 @@ export async function enrollMFA() {
     // create new one
     const { data, error } = await supabase.auth.mfa.enroll({
         factorType: "totp",
-        issuer: "BeginFire",
-        friendlyName: "Test123 2FA",
+        issuer: "BeginFiretest5",
+        friendlyName: "shoudl be verified5",
     });
 
     if (error) {
@@ -164,7 +165,13 @@ export async function verifyMFA({
         code,
     });
 
+    console.log(
+        "DATA FROM VERIFY MFA backend IS",
+        JSON.stringify(data?.user.factors)
+    );
+
     if (error) {
+        console.log("ERROR FROM VERIFY MFA IS", error);
         throw error;
     }
 
