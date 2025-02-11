@@ -88,7 +88,9 @@ export async function updateSession(request: NextRequest) {
         // If user is logged in and onboarding is in progress, redirect to onboarding page
         if (
             profile?.onboarding_status === "IN_PROGRESS" &&
-            !request.nextUrl.pathname.startsWith("/onboard")
+            !request.nextUrl.pathname.startsWith("/onboard") &&
+            mfaData?.nextLevel == "aal2" &&
+            mfaData?.currentLevel == "aal2"
         ) {
             const url = request.nextUrl.clone();
             url.pathname = "/onboard/kyc/start";
