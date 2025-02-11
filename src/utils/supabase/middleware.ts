@@ -58,7 +58,7 @@ export async function updateSession(request: NextRequest) {
         url.pathname = "/auth/login";
         return NextResponse.redirect(url);
     }
-    if (mfaData) {
+    if (mfaData && user) {
         // if i'm not on the mfa page, and i have mfa data, then i need to redirect to the mfa page
         if (!request.nextUrl.pathname.startsWith("/auth/mfa")) {
             if (
