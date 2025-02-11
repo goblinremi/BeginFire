@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const token_hash = searchParams.get("token_hash");
     const type = searchParams.get("type") as EmailOtpType | null;
-    const next = searchParams.get("next") ?? "/onboard/kyc/identity";
+    const next = searchParams.get("next") ?? "/auth/mfa/start";
     console.log("CONFIRMING AUTH EMAIL CONFIRMATION");
     console.log("token_hash", token_hash);
     console.log("type", type);
@@ -25,10 +25,11 @@ export async function GET(request: NextRequest) {
             //TODO: after confirming email, set user metadata as onboarding in progress
             const { data } = await supabase.auth.getUser();
             if (data.user) {
-                await supabase.from("profiles").insert({
-                    id: data.user.id, // Use user's Supabase UUID
-                    onboarding_status: "IN_PROGRESS",
-                });
+                // save for after mfa
+                // await supabase.from("profiles").insert({
+                //     id: data.user.id, // Use user's Supabase UUID
+                //     onboarding_status: "IN_PROGRESS",
+                // });
                 redirect(next);
             } else {
                 console.log("NO USER DATA");

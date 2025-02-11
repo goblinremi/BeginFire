@@ -42,7 +42,9 @@ export async function updateSession(request: NextRequest) {
     console.log("request.nextUrl.pathname", request.nextUrl.pathname);
     if (
         !user &&
-        !request.nextUrl.pathname.startsWith("/auth") &&
+        !request.nextUrl.pathname.startsWith("/auth/login") &&
+        !request.nextUrl.pathname.startsWith("/auth/signup") &&
+        !request.nextUrl.pathname.startsWith("/auth/email-not-confirmed") &&
         !request.nextUrl.pathname.startsWith("/api/auth")
     ) {
         // no user, potentially respond by redirecting the user to the login page
@@ -63,10 +65,11 @@ export async function updateSession(request: NextRequest) {
             !request.nextUrl.pathname.startsWith("/onboard")
         ) {
             const url = request.nextUrl.clone();
-            url.pathname = "/onboard/kyc/identity";
+            url.pathname = "/onboard/kyc/start";
             return NextResponse.redirect(url);
         }
         // if user is logged in and not in onboarding, and is on login or signup page, redirect to dashboard
+        //TODO: rework this logic for MFA
         if (
             request.nextUrl.pathname.startsWith("/auth/login") ||
             request.nextUrl.pathname.startsWith("/auth/signup") ||

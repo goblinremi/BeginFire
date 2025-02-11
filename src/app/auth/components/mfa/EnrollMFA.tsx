@@ -41,7 +41,7 @@ export default function EnrollMFA({ factorId, qrCode }: Props) {
             console.log("TOKEN TYPE IS", token_type);
             debugger;
 
-            redirectUrl = "/dashboard";
+            redirectUrl = "/auth/mfa/complete";
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : "Verification failed"
