@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
+//DON'T EVER USE THIS COMPONENT IN AN LOGIN/SIGNUP PAGE. USE ONLY FOR PAGES THAT NEED TO BE PROTECTED
+
 export function withAuth<P extends object>(
     WrappedComponent: React.ComponentType<P>
 ) {
