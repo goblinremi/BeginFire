@@ -2,7 +2,7 @@ import { enrollMFA } from "../../actions";
 import EnrollMFA from "../../components/mfa/EnrollMFA";
 import TopNavHeader from "../../components/TopNavHeader";
 export default async function EnrollMFAPage() {
-    const { factorId, qrCode } = await enrollMFA();
+    const { factorId, qrCode, secret } = await enrollMFA();
 
     // const factorId = "123";
     // const qrCode = "123";
@@ -13,7 +13,7 @@ export default async function EnrollMFAPage() {
                 title="Two-Factor Authentication"
                 backLink="/auth/mfa/start"
             />
-            <EnrollMFA factorId={factorId} qrCode={qrCode} />
+            <EnrollMFA secret={secret} factorId={factorId} qrCode={qrCode} />
         </div>
     );
 }

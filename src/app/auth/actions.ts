@@ -114,6 +114,7 @@ export async function enrollMFA() {
     return {
         factorId: data.id,
         qrCode: data.totp.qr_code,
+        secret: data.totp.secret,
     };
 }
 export async function unenrollMFA(factorId: string) {

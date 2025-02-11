@@ -16,10 +16,11 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
  */
 interface Props {
     factorId: string;
+    secret: string;
     qrCode: string;
 }
 
-export default function EnrollMFA({ factorId, qrCode }: Props) {
+export default function EnrollMFA({ factorId, qrCode, secret }: Props) {
     const [verifyCode, setVerifyCode] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -77,6 +78,17 @@ export default function EnrollMFA({ factorId, qrCode }: Props) {
                 />
             </div>
 
+            <div className="text-sm bg-offwhite rounded-lg p-2 w-full mb-2 text-center">
+                {secret}
+            </div>
+            <div
+                className="text-sm text-primary-dark cursor-pointer"
+                onClick={() => {
+                    navigator.clipboard.writeText(secret);
+                }}
+            >
+                Copy
+            </div>
             <p className="text-sm text-neutral mb-6 text-center">
                 Scan this QR code with your authenticator app (like Google
                 Authenticator or Authy) and enter the verification code below.
