@@ -89,6 +89,7 @@ export async function updateSession(request: NextRequest) {
         if (
             profile?.onboarding_status === "IN_PROGRESS" &&
             !request.nextUrl.pathname.startsWith("/onboard") &&
+            !request.nextUrl.pathname.startsWith("/auth/mfa/complete") &&
             mfaData?.nextLevel == "aal2" &&
             mfaData?.currentLevel == "aal2"
         ) {
@@ -114,7 +115,9 @@ export async function updateSession(request: NextRequest) {
             request.nextUrl.pathname.startsWith("/api/auth/confirm") ||
             (mfaData?.nextLevel == "aal2" &&
                 mfaData?.currentLevel == "aal2" &&
-                request.nextUrl.pathname.startsWith("/auth/mfa"))
+                (request.nextUrl.pathname.startsWith("/auth/mfa/start") ||
+                    request.nextUrl.pathname.startsWith("/auth/mfa/verify") ||
+                    request.nextUrl.pathname.startsWith("/auth/mfa/enroll")))
         ) {
             console.log("REDIRECTING TO DASHBOARD BECAUSE USER IS LOGGED IN");
             const url = request.nextUrl.clone();
