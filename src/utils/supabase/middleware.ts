@@ -77,6 +77,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // at this point, the user is logged in and has mfa verified
+    // OR they are not verified but they are on the mfa page
 
     if (user) {
         const { data: profile } = await supabase
@@ -91,6 +92,15 @@ export async function updateSession(request: NextRequest) {
         ) {
             const url = request.nextUrl.clone();
             url.pathname = "/onboard/kyc/start";
+            return NextResponse.redirect(url);
+        }
+        // If user is trying to access onboarding pages but is not in onboarding status, redirect to dashboard
+        if (
+            request.nextUrl.pathname.startsWith("/onboard") &&
+            profile?.onboarding_status !== "IN_PROGRESS"
+        ) {
+            const url = request.nextUrl.clone();
+            url.pathname = "/dashboard";
             return NextResponse.redirect(url);
         }
         // if user is logged in and not in onboarding, and is on login or signup page, redirect to dashboard
