@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { challengeMFA, unenrollMFA, verifyMFA } from "../../actions";
+import { challengeMFA, unenrollMFA, verifyFirstFactorMFA } from "../../actions";
 import { redirect } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ export default function EnrollMFA({ factorId, qrCode }: Props) {
         try {
             const { challengeId } = await challengeMFA(factorId);
 
-            const { access_token, token_type } = await verifyMFA({
+            const { access_token, token_type } = await verifyFirstFactorMFA({
                 factorId,
                 challengeId,
                 code: verifyCode,

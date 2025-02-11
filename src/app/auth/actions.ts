@@ -147,7 +147,66 @@ export async function challengeMFA(factorId: string) {
         challengeId: data.id,
     };
 }
+// To be used after the first factor is enrolled, to mark the user as starting onboarding.
+// For normal verification after login, use verifyMFA
+export async function verifyFirstFactorMFA({
+    factorId,
+    challengeId,
+    code,
+}: {
+    factorId: string;
+    challengeId: string;
+    code: string;
+}) {
+    const supabase = await createClient();
 
+    const { data, error } = await supabase.auth.mfa.verify({
+        factorId,
+        challengeId,
+        code,
+    });
+
+    if (error) {
+        console.log("ERROR FROM VERIFY MFA IS", error);
+        throw error;
+    }
+
+    // Update profiles to start onboarding
+    const userId = data.user.id;
+    const existingProfile = await supabase
+        .from("profile")
+        .select("onboarding_status")
+        .eq("id", userId)
+        .single();
+
+    console.log("EXISTING PROFILE IS", existingProfile);
+    // Verify First Factor MFA is only called after the first factor is enrolled
+    // So if the user is not NOT_STARTED, they have already started onboarding
+    // and are calling the endpoint incorrectly
+    // If it is called incorrectly, we can just return the data without resetting the user into onboarding again
+    if (existingProfile.data?.onboarding_status !== "NOT_STARTED") {
+        return data;
+    }
+
+    const { error: updateError, data: updatedProfile } = await supabase
+        .from("profile")
+        .update({
+            onboarding_status: "IN_PROGRESS",
+        })
+        .eq("id", userId)
+        .select("onboarding_status")
+        .single();
+
+    console.log("UPDATED PROFILE IS", updatedProfile);
+    if (updateError) {
+        console.log("ERROR UPDATING PROFILES IS", updateError);
+        throw updateError;
+    }
+    return {
+        ...data,
+        onboarding_status: updatedProfile?.onboarding_status,
+    };
+}
 export async function verifyMFA({
     factorId,
     challengeId,

@@ -24,12 +24,13 @@ export async function GET(request: NextRequest) {
             // redirect user to specified redirect URL or root of app
             //TODO: after confirming email, set user metadata as onboarding in progress
             const { data } = await supabase.auth.getUser();
+            console.log("DATA FROM confirm route is", data);
             if (data.user) {
-                // save for after mfa
-                // await supabase.from("profiles").insert({
-                //     id: data.user.id, // Use user's Supabase UUID
-                //     onboarding_status: "IN_PROGRESS",
-                // });
+                console.log("USER DATA FOUND");
+                await supabase.from("profile").insert({
+                    id: data.user.id, // Use user's Supabase UUID
+                });
+                console.log("USER DATA INSERTED");
                 redirect(next);
             } else {
                 console.log("NO USER DATA");
