@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { submitKYCApplication } from "../services/kycService";
 import { useToast } from "@/hooks/use-toast";
 
-interface KYCData {
+export interface KYCData {
     // Personal Info
     firstName: string;
     middleName?: string;

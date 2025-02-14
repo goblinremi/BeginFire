@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { StepIndicator } from "../components/StepIndicator";
 import { Label } from "@/components/ui/label";
 import { useKYC } from "../context/KYCContext";
-import { Select } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const experienceLevels = ["None", "Limited", "Good", "Extensive"];
@@ -55,22 +61,45 @@ const InvestmentPage = () => {
                             <Label>Investment Experience</Label>
                             <Select
                                 value={data.investmentExperience}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateData({ investmentExperience: value })
                                 }
-                                options={experienceLevels}
-                            />
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {experienceLevels.map((level) => (
+                                        <SelectItem key={level} value={level}>
+                                            {level}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="space-y-2">
                             <Label>Risk Tolerance</Label>
                             <Select
                                 value={data.riskTolerance}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateData({ riskTolerance: value })
                                 }
-                                options={riskTolerances}
-                            />
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {riskTolerances.map((tolerance) => (
+                                        <SelectItem
+                                            key={tolerance}
+                                            value={tolerance}
+                                        >
+                                            {tolerance}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="space-y-2">
@@ -103,22 +132,42 @@ const InvestmentPage = () => {
                             <Label>Liquid Net Worth</Label>
                             <Select
                                 value={data.liquidNetWorth}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateData({ liquidNetWorth: value })
                                 }
-                                options={netWorthRanges}
-                            />
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {netWorthRanges.map((range) => (
+                                        <SelectItem key={range} value={range}>
+                                            {range}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="space-y-2">
                             <Label>Total Net Worth</Label>
                             <Select
                                 value={data.totalNetWorth}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateData({ totalNetWorth: value })
                                 }
-                                options={netWorthRanges}
-                            />
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {netWorthRanges.map((range) => (
+                                        <SelectItem key={range} value={range}>
+                                            {range}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                 </div>

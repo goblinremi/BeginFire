@@ -2,7 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { useKYC } from "../context/KYCContext";
 import { StepIndicator } from "../components/StepIndicator";
 
@@ -35,7 +41,7 @@ const EmploymentPage = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-6">
-            <StepIndicator />
+            <StepIndicator currentStep={2} />
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
@@ -43,11 +49,21 @@ const EmploymentPage = () => {
                         <Label>Employment Status</Label>
                         <Select
                             value={data.employmentStatus}
-                            onChange={(value) =>
+                            onValueChange={(value: string) =>
                                 updateData({ employmentStatus: value })
                             }
-                            options={employmentStatusOptions}
-                        />
+                        >
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {employmentStatusOptions.map((status) => (
+                                    <SelectItem key={status} value={status}>
+                                        {status}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {data.employmentStatus === "Employed" && (
@@ -95,17 +111,27 @@ const EmploymentPage = () => {
                         <Label>Annual Income</Label>
                         <Select
                             value={data.annualIncome}
-                            onChange={(value) =>
+                            onValueChange={(value: string) =>
                                 updateData({ annualIncome: value })
                             }
-                            options={[
-                                "Under $25,000",
-                                "$25,000 - $50,000",
-                                "$50,000 - $100,000",
-                                "$100,000 - $250,000",
-                                "Over $250,000",
-                            ]}
-                        />
+                        >
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {[
+                                    "Under $25,000",
+                                    "$25,000 - $50,000",
+                                    "$50,000 - $100,000",
+                                    "$100,000 - $250,000",
+                                    "Over $250,000",
+                                ].map((income) => (
+                                    <SelectItem key={income} value={income}>
+                                        {income}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div>
