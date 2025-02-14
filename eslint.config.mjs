@@ -2,6 +2,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 import reactCompiler from "eslint-plugin-react-compiler";
+import react from "eslint-plugin-react";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,13 +14,10 @@ const compat = new FlatCompat({
 const eslintConfig = [
     ...compat.extends("next/core-web-vitals", "next/typescript"),
     {
-        plugins: {
-            "react-compiler": reactCompiler,
-        },
-        rules: {
-            "react-compiler/react-compiler": "error",
-        },
+        ...react.configs.flat.recommended,
+        settings: { react: { version: "detect" } },
     },
+    reactCompiler.configs.recommended,
 ];
 
 export default eslintConfig;
