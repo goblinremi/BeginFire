@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { StepIndicator } from "../components/StepIndicator";
 import { Label } from "@/components/ui/label";
 import { useKYC } from "../context/KYCContext";
-import { Select } from "@/components/ui/select";
-
+import { Select, SelectItem } from "@/components/ui/select";
 const states = [
     "AL",
     "AK",
@@ -125,16 +124,20 @@ const AddressPage = () => {
                                 placeholder="New York"
                             />
                         </div>
-
                         <div className="space-y-2">
                             <Label htmlFor="state">State</Label>
                             <Select
                                 value={data.residentialAddress.state}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateAddress("state", value)
                                 }
-                                options={states}
-                            />
+                            >
+                                {states.map((state) => (
+                                    <SelectItem key={state} value={state}>
+                                        {state}
+                                    </SelectItem>
+                                ))}
+                            </Select>
                         </div>
 
                         <div className="space-y-2">

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { DatePickerForm } from "../components/DatePickerForm";
+// import { DatePickerForm } from "../components/DatePickerForm";
 import {
     InputOTP,
     InputOTPGroup,
@@ -11,7 +11,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { StepIndicator } from "../components/StepIndicator";
 import { Label } from "@/components/ui/label";
 import { useKYC } from "../context/KYCContext";
-import { Select } from "@/components/ui/select";
+import { Select, SelectItem } from "@/components/ui/select";
 
 const IdentityPage = () => {
     const { data, updateData, nextStep, previousStep, isStepValid } = useKYC();
@@ -61,12 +61,12 @@ const IdentityPage = () => {
 
                         <div className="space-y-2">
                             <Label>Date of Birth</Label>
-                            <DatePickerForm
+                            {/* <DatePickerForm
                                 value={data.dateOfBirth}
-                                onChange={(date) =>
+                                onChange={(date: Date) =>
                                     updateData({ dateOfBirth: date })
                                 }
-                            />
+                            /> */}
                         </div>
                     </div>
 
@@ -75,22 +75,30 @@ const IdentityPage = () => {
                             <Label htmlFor="citizenship">Citizenship</Label>
                             <Select
                                 value={data.citizenship}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateData({ citizenship: value })
                                 }
-                                options={["United States", "Other"]}
-                            />
+                            >
+                                <SelectItem value="United States">
+                                    United States
+                                </SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
+                            </Select>
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="taxResidency">Tax Residency</Label>
                             <Select
                                 value={data.taxResidency}
-                                onChange={(value) =>
+                                onValueChange={(value: string) =>
                                     updateData({ taxResidency: value })
                                 }
-                                options={["United States", "Other"]}
-                            />
+                            >
+                                <SelectItem value="United States">
+                                    United States
+                                </SelectItem>
+                                <SelectItem value="Other">Other</SelectItem>
+                            </Select>
                         </div>
                     </div>
                 </div>
