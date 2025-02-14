@@ -8,12 +8,12 @@ import { useKYC } from "../context/KYCContext";
 const DocumentsPage = () => {
     const { updateData, previousStep, nextStep, isStepValid } = useKYC();
 
-    const handleFileUpload = (
-        type: "governmentIdFront" | "governmentIdBack" | "proofOfAddress",
-        file: File
-    ) => {
-        updateData({ [type]: file });
-    };
+    // const handleFileUpload = (
+    //     type: "governmentIdFront" | "governmentIdBack" | "proofOfAddress",
+    //     file: File
+    // ) => {
+    //     updateData({ [type]: file });
+    // };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

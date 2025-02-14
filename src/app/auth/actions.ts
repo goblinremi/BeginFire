@@ -120,7 +120,7 @@ export async function enrollMFA() {
 export async function unenrollMFA(factorId: string) {
     const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.mfa.unenroll({
+    const { error } = await supabase.auth.mfa.unenroll({
         factorId,
     });
 

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     try {
         const formData = await request.formData();
-        const data = JSON.parse(formData.get("data") as string);
+        // const data = JSON.parse(formData.get("data") as string);
 
         // Here you would:
         // 1. Validate the data
