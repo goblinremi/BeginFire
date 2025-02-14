@@ -3,6 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { submitKYCApplication } from "../services/kycService";
 import { useToast } from "@/hooks/use-toast";
+
 interface KYCData {
     // Personal Info
     firstName: string;
@@ -153,6 +154,7 @@ export function KYCProvider({ children }: { children: ReactNode }) {
         firstName: "",
         lastName: "",
         email: "",
+        phone: "",
         ssn: "",
         dateOfBirth: undefined,
         citizenship: "",
