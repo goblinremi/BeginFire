@@ -12,8 +12,9 @@ export default function StartMFA() {
                         Protect your withdrawals by enabling 2FA
                     </h1>
                     <p className="text-sm text-neutral">
-                        You'll need to enter a verification code when logging in
-                        and withdrawing funds, making sure only you have access.
+                        You&apos;ll need to enter a verification code when
+                        logging in and withdrawing funds, making sure only you
+                        have access.
                     </p>
                     <div className="flex flex-col gap-y-2 mt-2">
                         <div className="text-sm  flex items-center gap-x-1 font-semibold">

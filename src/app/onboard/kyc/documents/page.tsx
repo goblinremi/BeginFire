@@ -6,7 +6,7 @@ import { Upload } from "lucide-react";
 import { useKYC } from "../context/KYCContext";
 
 const DocumentsPage = () => {
-    const { data, updateData, previousStep, nextStep, isStepValid } = useKYC();
+    const { updateData, previousStep, nextStep, isStepValid } = useKYC();
 
     const handleFileUpload = (
         type: "governmentIdFront" | "governmentIdBack" | "proofOfAddress",

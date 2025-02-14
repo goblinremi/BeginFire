@@ -2,13 +2,13 @@
 import { useState } from "react";
 import { challengeMFA, verifyMFA, listMFAFactors } from "../../actions";
 import { redirect } from "next/navigation";
-import { Input } from "@/components/ui/input";
+
 import {
     InputOTP,
     InputOTPGroup,
-    InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp";
+
 import { Button } from "@/components/ui/button";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
