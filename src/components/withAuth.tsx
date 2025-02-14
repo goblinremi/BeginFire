@@ -1,10 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
 //DON'T EVER USE THIS COMPONENT IN AN LOGIN/SIGNUP PAGE. USE ONLY FOR PAGES THAT NEED TO BE PROTECTED
 
 export function withAuth<P extends object>(
-    WrappedComponent: React.ComponentType<P>
+    WrappedComponent: React.ComponentType<P & { user: User }>
 ) {
     return async function AuthenticatedComponent(props: P) {
         const supabase = await createClient();
