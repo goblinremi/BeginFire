@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { InputOTPGroup } from "@/components/ui/input-otp";
 import { InputOTP, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-
+import Image from "next/image";
 /**
  * EnrollMFA shows a simple enrollment dialog. When shown on screen it calls
  * the `enroll` API. Each time a user clicks the Enable button it calls the
@@ -70,7 +70,7 @@ export default function EnrollMFA({ factorId, qrCode, secret }: Props) {
                 Open your authenticator app and choose scan barcode.
             </p>
             <div className="flex justify-center my-10">
-                <img
+                <Image
                     src={qrCode}
                     alt="QR Code"
                     className="w-[170px] h-[170px]"

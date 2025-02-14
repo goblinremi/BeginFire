@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
-        // const formData = await request.formData();
-        // const data = JSON.parse(formData.get("data") as string);
+        const formData = await request.formData();
+        const data = JSON.parse(formData.get("data") as string);
 
         // Here you would:
         // 1. Validate the data
@@ -11,6 +11,8 @@ export async function POST(request: Request) {
         // 3. Store in your database
         // 4. Make API calls to your KYC provider
         // 5. Create the user account if needed
+
+        console.log("DATA FROM KYC SUBMIT IS", data);
 
         // For now, we'll just simulate a successful submission
         await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate processing time
