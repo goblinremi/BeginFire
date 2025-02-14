@@ -182,8 +182,10 @@ export function KYCProvider({ children }: { children: ReactNode }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const getCurrentStepIndex = () => {
-        const currentPath = window.location.pathname;
-        return ONBOARDING_STEPS.findIndex((step) => currentPath === step.path);
+        console.log("getting current step");
+        return 1;
+        // const currentPath = router.asPath;
+        // return ONBOARDING_STEPS.findIndex((step) => currentPath === step.path);
     };
 
     const isStepValid = () => {
