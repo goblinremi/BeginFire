@@ -11,7 +11,13 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { StepIndicator } from "../components/StepIndicator";
 import { Label } from "@/components/ui/label";
 import { useKYC } from "../context/KYCContext";
-import { Select, SelectItem } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 const IdentityPage = () => {
     const { data, updateData, nextStep, previousStep, isStepValid } = useKYC();
@@ -79,10 +85,15 @@ const IdentityPage = () => {
                                     updateData({ citizenship: value })
                                 }
                             >
-                                <SelectItem value="United States">
-                                    United States
-                                </SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select citizenship" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="United States">
+                                        United States
+                                    </SelectItem>
+                                    <SelectItem value="Other">Other</SelectItem>
+                                </SelectContent>
                             </Select>
                         </div>
 
@@ -94,10 +105,15 @@ const IdentityPage = () => {
                                     updateData({ taxResidency: value })
                                 }
                             >
-                                <SelectItem value="United States">
-                                    United States
-                                </SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select tax residency" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="United States">
+                                        United States
+                                    </SelectItem>
+                                    <SelectItem value="Other">Other</SelectItem>
+                                </SelectContent>
                             </Select>
                         </div>
                     </div>

@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import { StepIndicator } from "../components/StepIndicator";
 import { Label } from "@/components/ui/label";
 import { useKYC } from "../context/KYCContext";
-import { Select, SelectItem } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 const states = [
     "AL",
     "AK",
@@ -126,17 +132,17 @@ const AddressPage = () => {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="state">State</Label>
-                            <Select
-                                value={data.residentialAddress.state}
-                                onValueChange={(value: string) =>
-                                    updateAddress("state", value)
-                                }
-                            >
-                                {states.map((state) => (
-                                    <SelectItem key={state} value={state}>
-                                        {state}
-                                    </SelectItem>
-                                ))}
+                            <Select>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a state" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {states.map((state) => (
+                                        <SelectItem key={state} value={state}>
+                                            {state}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
                             </Select>
                         </div>
 
