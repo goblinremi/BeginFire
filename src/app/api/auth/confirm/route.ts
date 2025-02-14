@@ -7,10 +7,6 @@ export async function GET(request: NextRequest) {
     const token_hash = searchParams.get("token_hash");
     const type = searchParams.get("type") as EmailOtpType | null;
     const next = searchParams.get("next") ?? "/auth/mfa/start";
-    console.log("CONFIRMING AUTH EMAIL CONFIRMATION");
-    console.log("token_hash", token_hash);
-    console.log("type", type);
-    console.log("next", next);
     if (token_hash && type) {
         const supabase = await createClient();
 
@@ -20,21 +16,22 @@ export async function GET(request: NextRequest) {
         });
 
         if (!error) {
-            console.log("NO ERROR");
-            // redirect user to specified redirect URL or root of app
-            //TODO: after confirming email, set user metadata as onboarding in progress
-            const { data } = await supabase.auth.getUser();
-            console.log("DATA FROM confirm route is", data);
-            if (data.user) {
-                console.log("USER DATA FOUND");
-                await supabase.from("profile").insert({
-                    id: data.user.id, // Use user's Supabase UUID
-                });
-                console.log("USER DATA INSERTED");
-                redirect(next);
-            } else {
-                console.log("NO USER DATA");
-            }
+            // console.log("NO ERROR");
+            // // redirect user to specified redirect URL or root of app
+            // //TODO: after confirming email, set user metadata as onboarding in progress
+            // const { data } = await supabase.auth.getUser();
+            // console.log("DATA FROM confirm route is", data);
+            // if (data.user) {
+            //     console.log("USER DATA FOUND");
+            //     await supabase.from("profile").insert({
+            //         id: data.user.id, // Use user's Supabase UUID
+            //     });
+            //     console.log("USER DATA INSERTED");
+            //     redirect(next);
+            // } else {
+            //     console.log("NO USER DATA");
+            // }
+            redirect(next);
         }
         console.log("ERROR from email confirmation", error);
     }
