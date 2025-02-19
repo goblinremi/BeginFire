@@ -64,7 +64,7 @@ const states = [
 ];
 
 const AddressPage = () => {
-    const { data, updateData, nextStep, previousStep, isStepValid } = useKYC();
+    const { data, updateData, nextStep, previousStep } = useKYC();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

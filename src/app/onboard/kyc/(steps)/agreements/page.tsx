@@ -7,14 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AgreementsPage = () => {
-    const {
-        data,
-        updateData,
-        previousStep,
-        isStepValid,
-        submitApplication,
-        isSubmitting,
-    } = useKYC();
+    const { data, updateData, previousStep, submitApplication, isSubmitting } =
+        useKYC();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

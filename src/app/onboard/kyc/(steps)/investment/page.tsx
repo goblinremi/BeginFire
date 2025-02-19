@@ -127,7 +127,7 @@ const InvestmentPage = () => {
                         </div>
                     </div>
 
-                    <div className="space-y-6">
+                    {/* <div className="space-y-6">
                         <div className="space-y-2">
                             <Label>Liquid Net Worth</Label>
                             <Select
@@ -169,7 +169,7 @@ const InvestmentPage = () => {
                                 </SelectContent>
                             </Select>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="flex justify-end space-x-4 pt-6 border-t">

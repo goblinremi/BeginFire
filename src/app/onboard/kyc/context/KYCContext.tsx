@@ -3,209 +3,131 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { submitKYCApplication } from "../services/kycService";
 import { useToast } from "@/hooks/use-toast";
-import { ONBOARDING_STEPS } from "../constants";
-export interface KYCData {
-    // Personal Info
-    firstName: string;
-    middleName?: string;
-    lastName: string;
-    email: string;
-    phone: string;
-
-    // Identity Verification
-    ssn: string;
-    dateOfBirth: Date | undefined;
-    citizenship: string;
-    taxResidency: string;
-
-    // Address Information
-    residentialAddress: {
-        street1: string;
-        street2?: string;
-        city: string;
-        state: string;
-        zipCode: string;
-        country: string;
-    };
-
-    // Employment Information
-    employmentStatus: string;
-    employer?: string;
-    occupation?: string;
-    yearsEmployed?: number;
-    annualIncome?: string;
-    sourceOfIncome?: string[];
-
-    // Investment Profile
-    investmentExperience: string;
-    riskTolerance: string;
-    investmentObjectives: string[];
-    liquidNetWorth: string;
-    totalNetWorth: string;
-
-    // Regulatory Questions
-    isPoliticallyExposed: boolean;
-    isAffiliatedWithBrokerDealer: boolean;
-    isShareholder: boolean;
-
-    // Documents
-    governmentIdFront?: File;
-    governmentIdBack?: File;
-    proofOfAddress?: File;
-
-    // Agreements
-    hasAcceptedTerms: boolean;
-    hasAcceptedPrivacyPolicy: boolean;
-    hasAcceptedCustomerAgreement: boolean;
-    hasAcceptedMarginAgreement?: boolean;
-}
-
-interface KYCContextType {
-    data: KYCData;
-    currentStep: number;
-    updateData: (newData: Partial<KYCData>) => void;
-    nextStep: () => void;
-    previousStep: () => void;
-    isStepValid: () => boolean;
-    submitApplication: () => Promise<void>;
-    isSubmitting: boolean;
-}
+import {
+    ACCOUNT_FUNDING_SOURCE_OPTIONS,
+    INVESTMENT_EXPERIENCE_OPTIONS,
+    INVESTIBLE_ASSETS_OPTIONS,
+    HOUSEHOLD_INCOME_OPTIONS,
+    EMPLOYMENT_STATUS_OPTIONS,
+    KYC_STEPS,
+} from "../constants";
+import {
+    type KYCData,
+    type KYCFormState,
+    type KYCContextType,
+    type StepId,
+} from "../types";
 
 const KYCContext = createContext<KYCContextType | undefined>(undefined);
+
+const initialKYCData: KYCData = {
+    identity: {
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        phone: "",
+        ssn: "",
+        dateOfBirth: new Date(),
+    },
+    employment: {
+        employmentStatus: "",
+    },
+    address: {
+        street1: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+    },
+    financial: {
+        employmentStatus: EMPLOYMENT_STATUS_OPTIONS[0].value,
+        householdIncome: HOUSEHOLD_INCOME_OPTIONS[0].value,
+        investibleAssets: INVESTIBLE_ASSETS_OPTIONS[0].value,
+        investmentExperience: INVESTMENT_EXPERIENCE_OPTIONS[0].value,
+        // riskTolerance: "",
+        // investmentObjectives: [],
+        accountFundingSource: ACCOUNT_FUNDING_SOURCE_OPTIONS[0].value,
+    },
+    regulatory: {
+        isPoliticallyExposed: false,
+        isAffiliatedWithBrokerDealer: false,
+        isShareholder: false,
+    },
+    documents: {},
+    agreements: {
+        hasAcceptedTerms: false,
+        hasAcceptedPrivacyPolicy: false,
+        hasAcceptedCustomerAgreement: false,
+    },
+};
+
+const initialFormState: KYCFormState = {
+    identity: { isValid: false, isSubmitted: false, data: null },
+    employment: { isValid: false, isSubmitted: false, data: null },
+    address: { isValid: false, isSubmitted: false, data: null },
+    financial: { isValid: false, isSubmitted: false, data: null },
+    regulatory: { isValid: false, isSubmitted: false, data: null },
+    documents: { isValid: false, isSubmitted: false, data: null },
+    agreements: { isValid: false, isSubmitted: false, data: null },
+};
 
 export function KYCProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
     const { toast } = useToast();
-    const [data, setData] = useState<KYCData>({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        ssn: "",
-        dateOfBirth: undefined,
-        citizenship: "",
-        taxResidency: "",
-        residentialAddress: {
-            street1: "",
-            city: "",
-            state: "",
-            zipCode: "",
-            country: "",
-        },
-        employmentStatus: "",
-        investmentExperience: "",
-        riskTolerance: "",
-        investmentObjectives: [],
-        liquidNetWorth: "",
-        totalNetWorth: "",
-        isPoliticallyExposed: false,
-        isAffiliatedWithBrokerDealer: false,
-        isShareholder: false,
-        hasAcceptedTerms: false,
-        hasAcceptedPrivacyPolicy: false,
-        hasAcceptedCustomerAgreement: false,
-    });
+    const [formState, setFormState] = useState<KYCFormState>(initialFormState);
+    const [data, setData] = useState<KYCData>(initialKYCData);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
-    // const getCurrentStepIndex = () => {
-    //     console.log("getting current step");
-    //     return 1;
-    //     // const currentPath = router.asPath;
-    //     // return ONBOARDING_STEPS.findIndex((step) => currentPath === step.path);
-    // };
 
-    const isStepValid = () => {
-        // const currentStep = getCurrentStepIndex();
+    const updateStepData = <T extends keyof KYCData>(
+        step: T,
+        stepData: Partial<KYCData[T]>,
+        isValid = false
+    ) => {
+        setFormState((prev) => ({
+            ...prev,
+            [step]: {
+                isValid,
+                isSubmitted: true,
+                data: { ...prev[step].data, ...stepData },
+            },
+        }));
 
-        switch (currentStep) {
-            case 0: // Personal Info
-                return (
-                    data.firstName.trim() !== "" &&
-                    data.lastName.trim() !== "" &&
-                    data.email.trim() !== "" &&
-                    data.phone.trim() !== "" &&
-                    data.ssn.length === 9 &&
-                    data.dateOfBirth !== undefined &&
-                    data.citizenship.trim() !== "" &&
-                    data.taxResidency.trim() !== ""
-                );
-            case 1: // Identity
-                return (
-                    data.ssn.length === 9 &&
-                    data.dateOfBirth !== undefined &&
-                    data.citizenship.trim() !== "" &&
-                    data.taxResidency.trim() !== ""
-                );
-            case 2: // Address
-                return (
-                    data.residentialAddress.street1.trim() !== "" &&
-                    data.residentialAddress.city.trim() !== "" &&
-                    data.residentialAddress.state.trim() !== "" &&
-                    data.residentialAddress.zipCode.trim() !== "" &&
-                    data.residentialAddress.country.trim() !== ""
-                );
-            case 3: // Employment
-                return (
-                    data.employmentStatus.trim() !== "" &&
-                    data.yearsEmployed !== undefined &&
-                    data.annualIncome !== undefined &&
-                    data.sourceOfIncome !== undefined
-                );
-            case 4: // Investment Profile
-                return (
-                    data.investmentExperience.trim() !== "" &&
-                    data.riskTolerance.trim() !== "" &&
-                    data.investmentObjectives.length > 0 &&
-                    data.liquidNetWorth.trim() !== "" &&
-                    data.totalNetWorth.trim() !== ""
-                );
-            case 5: // Regulatory Questions
-                return (
-                    data.isPoliticallyExposed === true &&
-                    data.isAffiliatedWithBrokerDealer === true &&
-                    data.isShareholder === true
-                );
-            case 6: // Documents
-                return (
-                    data.governmentIdFront !== undefined &&
-                    data.governmentIdBack !== undefined &&
-                    data.proofOfAddress !== undefined
-                );
-            case 7: // Agreements
-                return (
-                    data.hasAcceptedTerms === true &&
-                    data.hasAcceptedPrivacyPolicy === true &&
-                    data.hasAcceptedCustomerAgreement === true &&
-                    data.hasAcceptedMarginAgreement === true
-                );
-            default:
-                return false;
-        }
+        setData((prev) => ({
+            ...prev,
+            [step]: { ...prev[step], ...stepData },
+        }));
     };
 
     const nextStep = () => {
-        // if (!isStepValid()) return;
-        console.log("next step in context");
-        if (currentStep < ONBOARDING_STEPS.length - 1) {
-            console.log("pushing to next step");
-            router.push(ONBOARDING_STEPS[currentStep + 1].path);
-            setCurrentStep(currentStep + 1);
+        if (currentStep < KYC_STEPS.length - 1) {
+            let nextStepIndex = currentStep + 1;
+
+            // Skip steps that shouldn't be shown based on conditions
+            while (
+                nextStepIndex < KYC_STEPS.length &&
+                KYC_STEPS[nextStepIndex] &&
+                KYC_STEPS[nextStepIndex].showIf &&
+                !KYC_STEPS[nextStepIndex].showIf?.(data)
+            ) {
+                nextStepIndex++;
+            }
+
+            if (nextStepIndex < KYC_STEPS.length) {
+                router.push(KYC_STEPS[nextStepIndex].path);
+                setCurrentStep(nextStepIndex);
+            }
         }
     };
 
     const previousStep = () => {
         if (currentStep > 0) {
-            router.push(ONBOARDING_STEPS[currentStep - 1].path);
+            router.push(KYC_STEPS[currentStep - 1].path);
+            setCurrentStep(currentStep - 1);
         }
     };
 
-    const updateData = (newData: Partial<KYCData>) => {
-        setData((prev) => ({ ...prev, ...newData }));
-    };
-
     const submitApplication = async () => {
-        if (!isStepValid()) return;
-
         try {
             setIsSubmitting(true);
             await submitKYCApplication(data);
@@ -217,7 +139,6 @@ export function KYCProvider({ children }: { children: ReactNode }) {
                 duration: 5000,
             });
 
-            // Redirect to success page or dashboard
             router.push("/onboard/kyc/success");
         } catch (error) {
             console.error("Error submitting application:", error);
@@ -233,17 +154,50 @@ export function KYCProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const isStepCompleted = (stepId: StepId): boolean => {
+        return formState[stepId].isValid && formState[stepId].isSubmitted;
+    };
+
+    const canAccessStep = (stepId: StepId): boolean => {
+        const step = KYC_STEPS.find((s) => s.id === stepId);
+        if (!step) return false;
+
+        // Check if step should be shown based on conditions
+        if (step.showIf && !step.showIf(data)) {
+            return false;
+        }
+
+        // Check if all dependencies are completed
+        if (step.dependencies) {
+            const dependenciesCompleted = step.dependencies.every((depId) =>
+                isStepCompleted(depId)
+            );
+            if (!dependenciesCompleted) return false;
+        }
+
+        // If there are previous required steps that aren't completed, block access
+        const stepIndex = KYC_STEPS.findIndex((s) => s.id === stepId);
+        const previousSteps = KYC_STEPS.slice(0, stepIndex);
+        const previousRequired = previousSteps.filter(
+            (s) => s.required && (!s.showIf || s.showIf(data))
+        );
+
+        return previousRequired.every((s) => isStepCompleted(s.id));
+    };
+
     return (
         <KYCContext.Provider
             value={{
                 data,
+                formState,
                 currentStep,
-                updateData,
+                updateStepData,
                 nextStep,
                 previousStep,
-                isStepValid,
                 submitApplication,
                 isSubmitting,
+                isStepCompleted,
+                canAccessStep,
             }}
         >
             {children}
@@ -258,6 +212,3 @@ export const useKYC = () => {
     }
     return context;
 };
-
-// Export the steps for use in other components
-export const getOnboardingSteps = () => ONBOARDING_STEPS;

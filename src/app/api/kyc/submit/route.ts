@@ -1,34 +1,71 @@
 import { NextResponse } from "next/server";
+import {
+    identityFormSchema,
+    employmentFormSchema,
+    financialFormSchema,
+    type KYCSubmitResponse,
+} from "@/app/onboard/kyc/types";
 
 export async function POST(request: Request) {
     try {
         const formData = await request.formData();
         const data = JSON.parse(formData.get("data") as string);
 
+        // Validate all sections
+        const identityValidation = identityFormSchema.safeParse(data.identity);
+        const employmentValidation = employmentFormSchema.safeParse(
+            data.employment
+        );
+        const financialValidation = financialFormSchema.safeParse(
+            data.financial
+        );
+
+        if (
+            !identityValidation.success ||
+            !employmentValidation.success ||
+            !financialValidation.success
+        ) {
+            const response: KYCSubmitResponse = {
+                success: false,
+                message: "Validation failed",
+                error: JSON.stringify({
+                    identity: identityValidation.success
+                        ? null
+                        : identityValidation.error.format(),
+                    employment: employmentValidation.success
+                        ? null
+                        : employmentValidation.error.format(),
+                    financial: financialValidation.success
+                        ? null
+                        : financialValidation.error.format(),
+                }),
+            };
+            return NextResponse.json(response, { status: 400 });
+        }
+
+        // Process files if they exist
+        const governmentIdFront = formData.get("governmentIdFront") as File;
+        const governmentIdBack = formData.get("governmentIdBack") as File;
+        const proofOfAddress = formData.get("proofOfAddress") as File;
+
         // Here you would:
-        // 1. Validate the data
-        // 2. Process the files
-        // 3. Store in your database
-        // 4. Make API calls to your KYC provider
-        // 5. Create the user account if needed
+        // 1. Upload files to storage
+        // 2. Store data in your database
+        // 3. Make API calls to your KYC provider
+        // 4. Create the user account if needed
 
-        console.log("DATA FROM KYC SUBMIT IS", data);
-
-        // For now, we'll just simulate a successful submission
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate processing time
-
-        return NextResponse.json({
+        const response: KYCSubmitResponse = {
             success: true,
             message: "KYC application submitted successfully",
-        });
+        };
+
+        return NextResponse.json(response);
     } catch (error) {
-        console.error("Error processing KYC submission:", error);
-        return NextResponse.json(
-            {
-                success: false,
-                message: "Failed to process KYC application",
-            },
-            { status: 500 }
-        );
+        const response: KYCSubmitResponse = {
+            success: false,
+            message: "Failed to process KYC application",
+            error: error instanceof Error ? error.message : "Unknown error",
+        };
+        return NextResponse.json(response, { status: 500 });
     }
 }

@@ -1,16 +1,17 @@
 "use client";
+import { FieldErrors, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-// import { DatePickerForm } from "../components/DatePickerForm";
 import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { StepIndicator } from "../../components/StepIndicator";
-import { Label } from "@/components/ui/label";
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import { useKYC } from "../../context/KYCContext";
+import { financialFormSchema, type FinancialFormData } from "../../types";
 import {
     Select,
     SelectContent,
@@ -18,145 +19,283 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { DatePickerForm } from "../../components/DatePickerForm";
-import { PhoneInput } from "@/components/ui/phone-input";
+import {
+    EMPLOYMENT_STATUS_OPTIONS,
+    HOUSEHOLD_INCOME_OPTIONS,
+    INVESTIBLE_ASSETS_OPTIONS,
+    INVESTMENT_EXPERIENCE_OPTIONS,
+    ACCOUNT_FUNDING_SOURCE_OPTIONS,
+} from "../../constants";
 
 const labelClassName = "text-sm font-medium mb-2";
 
 const FinancialPage = () => {
-    const { data, updateData, nextStep, previousStep, isStepValid } = useKYC();
+    const { data, updateStepData, nextStep } = useKYC();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("submitted");
-        // if (isStepValid()) {
-        //     console.log("valid");
-        //     nextStep();
-        // }
+    const form = useForm<FinancialFormData>({
+        resolver: zodResolver(financialFormSchema),
+        defaultValues: {
+            employmentStatus: data.financial.employmentStatus,
+            householdIncome: data.financial.householdIncome,
+            investibleAssets: data.financial.investibleAssets,
+            investmentExperience: data.financial.investmentExperience,
+            // riskTolerance: data.financial.riskTolerance,
+            // investmentObjectives: data.financial.investmentObjectives,
+            // liquidNetWorth: data.financial.liquidNetWorth,
+            accountFundingSource: data.financial.accountFundingSource,
+            // totalNetWorth: data.financial.totalNetWorth,
+        },
+        mode: "onSubmit",
+    });
+
+    const onSubmit = (values: FinancialFormData) => {
+        updateStepData("financial", values, true);
         nextStep();
     };
 
+    const onError = (errors: FieldErrors<FinancialFormData>) => {
+        console.log(errors);
+    };
+
     return (
-        <form
-            onSubmit={handleSubmit}
-            className="h-full justify-between flex flex-col"
-        >
-            <div className="space-y-8">
-                <div>
-                    <h1 className="mb-2">
-                        We need some information about your financial situation
-                    </h1>
-                    <p className="text-neutral text-sm">
-                        Please pick the answers that best describes your
-                        financial situation.
-                    </p>
+        <Form {...form}>
+            <form
+                onSubmit={form.handleSubmit(onSubmit, onError)}
+                className="h-full justify-between flex flex-col"
+            >
+                <div className="space-y-8">
+                    <div>
+                        <h1 className="mb-2">
+                            We need some information about your financial
+                            situation
+                        </h1>
+                        <p className="text-neutral text-sm">
+                            Please pick the answers that best describes your
+                            financial situation.
+                        </p>
+                    </div>
+
+                    <FormField
+                        control={form.control}
+                        name="employmentStatus"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Employment Status
+                                </FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Employment Status" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {EMPLOYMENT_STATUS_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="householdIncome"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Household Income
+                                </FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a Range" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {HOUSEHOLD_INCOME_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="investibleAssets"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Investible/Liquid Assets
+                                </FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a Range" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {INVESTIBLE_ASSETS_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="investmentExperience"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Investment Experience
+                                </FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Experience Level" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {INVESTMENT_EXPERIENCE_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="accountFundingSource"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Account Funding Source
+                                </FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Funding Source" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {ACCOUNT_FUNDING_SOURCE_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            )
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    {/* <FormField
+                        control={form.control}
+                        name="riskTolerance"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Risk Tolerance
+                                </FormLabel>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Risk Level" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="conservative">
+                                            Conservative
+                                        </SelectItem>
+                                        <SelectItem value="moderate">
+                                            Moderate
+                                        </SelectItem>
+                                        <SelectItem value="aggressive">
+                                            Aggressive
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    /> */}
+
+                    {/* TODO: Add multi-select for investment objectives */}
                 </div>
-                <div>
-                    <Label className={labelClassName} htmlFor="lastName">
-                        Employment Status
-                    </Label>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select Employment Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="employed">Employed</SelectItem>
-                            <SelectItem value="unemployed">
-                                Unemployed
-                            </SelectItem>
-                            <SelectItem value="retired">Retired</SelectItem>
-                            <SelectItem value="student">Student</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div>
-                    <Label className={labelClassName} htmlFor="lastName">
-                        Account Funding Source
-                    </Label>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select Account Funding Source" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="employment_income">
-                                Employment Income
-                            </SelectItem>
-                            <SelectItem value="investments">
-                                Investments
-                            </SelectItem>
-                            <SelectItem value="inheritance">
-                                Inheritance
-                            </SelectItem>
-                            <SelectItem value="business_income">
-                                Business Income
-                            </SelectItem>
-                            <SelectItem value="savings">Savings</SelectItem>
-                            <SelectItem value="family">Family</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div>
-                    <Label className={labelClassName} htmlFor="lastName">
-                        Household Income
-                    </Label>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a Range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="0-20000">0 - $20,000</SelectItem>
-                            <SelectItem value="20000-49999">
-                                $20,000 - $49,999
-                            </SelectItem>
-                            <SelectItem value="50000-99999">
-                                $50,000 - $99,999
-                            </SelectItem>
-                            <SelectItem value="100000-499999">
-                                $100,000 - $499,999
-                            </SelectItem>
-                            <SelectItem value="500000-999999">
-                                $500,000 - $999,999
-                            </SelectItem>
-                            <SelectItem value="1000000-9999999">
-                                $1,000,000 - $9,999,999
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div>
-                    <Label className={labelClassName} htmlFor="lastName">
-                        Investible/Liquid Assets
-                    </Label>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a Range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="0-20000">0 - $20,000</SelectItem>
-                            <SelectItem value="20000-49999">
-                                $20,000 - $49,999
-                            </SelectItem>
-                            <SelectItem value="50000-99999">
-                                $50,000 - $99,999
-                            </SelectItem>
-                            <SelectItem value="100000-499999">
-                                $100,000 - $499,999
-                            </SelectItem>
-                            <SelectItem value="500000-999999">
-                                $500,000 - $999,999
-                            </SelectItem>
-                            <SelectItem value="1000000-9999999">
-                                $1,000,000 - $9,999,999
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
-            <Button type="submit" className="w-full" size="lg" variant="neon">
-                Continue
-            </Button>
-        </form>
+
+                <Button
+                    type="submit"
+                    className="w-full"
+                    size="lg"
+                    variant="neon"
+                >
+                    Continue
+                </Button>
+            </form>
+        </Form>
     );
 };
 

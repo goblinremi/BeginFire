@@ -58,23 +58,23 @@ export async function updateSession(request: NextRequest) {
         url.pathname = "/auth/login";
         return NextResponse.redirect(url);
     }
-    if (mfaData && user) {
-        // if i'm not on the mfa page, and i have mfa data, then i need to redirect to the mfa page
-        if (!request.nextUrl.pathname.startsWith("/auth/mfa")) {
-            if (
-                mfaData.nextLevel === "aal2" &&
-                mfaData.nextLevel !== mfaData.currentLevel
-            ) {
-                const url = request.nextUrl.clone();
-                url.pathname = "/auth/mfa/verify";
-                return NextResponse.redirect(url);
-            } else if (mfaData.nextLevel === "aal1") {
-                const url = request.nextUrl.clone();
-                url.pathname = "/auth/mfa/start";
-                return NextResponse.redirect(url);
-            }
-        }
-    }
+    // if (mfaData && user) {
+    //     // if i'm not on the mfa page, and i have mfa data, then i need to redirect to the mfa page
+    //     if (!request.nextUrl.pathname.startsWith("/auth/mfa")) {
+    //         if (
+    //             mfaData.nextLevel === "aal2" &&
+    //             mfaData.nextLevel !== mfaData.currentLevel
+    //         ) {
+    //             const url = request.nextUrl.clone();
+    //             url.pathname = "/auth/mfa/verify";
+    //             return NextResponse.redirect(url);
+    //         } else if (mfaData.nextLevel === "aal1") {
+    //             const url = request.nextUrl.clone();
+    //             url.pathname = "/auth/mfa/start";
+    //             return NextResponse.redirect(url);
+    //         }
+    //     }
+    // }
 
     // at this point, the user is logged in and has mfa verified
     // OR they are not verified but they are on the mfa page

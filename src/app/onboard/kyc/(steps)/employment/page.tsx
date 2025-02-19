@@ -1,81 +1,110 @@
 "use client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-// import { DatePickerForm } from "../components/DatePickerForm";
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { StepIndicator } from "../../components/StepIndicator";
-import { Label } from "@/components/ui/label";
-import { useKYC } from "../../context/KYCContext";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { DatePickerForm } from "../../components/DatePickerForm";
-import { PhoneInput } from "@/components/ui/phone-input";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { useKYC } from "../../context/KYCContext";
+import { employmentFormSchema, type EmploymentFormValues } from "../../types";
 
 const labelClassName = "text-sm font-medium mb-2";
 
 const EmploymentPage = () => {
-    const { data, updateData, nextStep, previousStep, isStepValid } = useKYC();
+    const { data, updateStepData, nextStep } = useKYC();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("submitted");
-        // if (isStepValid()) {
-        //     console.log("valid");
-        //     nextStep();
-        // }
+    const form = useForm<EmploymentFormValues>({
+        resolver: zodResolver(employmentFormSchema),
+        defaultValues: {
+            employmentStatus: data.employment.employmentStatus,
+            employer: data.employment.employer,
+            occupation: data.employment.occupation,
+            yearsEmployed: data.employment.yearsEmployed,
+            annualIncome: data.employment.annualIncome,
+            sourceOfIncome: data.employment.sourceOfIncome,
+        },
+        mode: "onSubmit",
+    });
+
+    const onSubmit = (values: EmploymentFormValues) => {
+        updateStepData("employment", values, true);
         nextStep();
     };
 
     return (
         <div className="flex flex-col justify-between w-full h-full">
-            <div className="flex flex-col gap-y-8">
-                <div onSubmit={handleSubmit} className="space-y-8">
-                    <div>
-                        <Label
-                            className={labelClassName}
-                            htmlFor="employerName"
-                        >
-                            Employer Name
-                        </Label>
-                        <Input type="text" placeholder="Employer Name" />
-                    </div>
-                    <div>
-                        <Label className={labelClassName} htmlFor="jobTitle">
-                            Job Title
-                        </Label>
-                        <Input type="text" placeholder="Job Title" />
-                    </div>
-                    <div>
-                        <Label
-                            className={labelClassName}
-                            htmlFor="employerAddress"
-                        >
-                            Employer Address
-                        </Label>
-                        <Input type="text" placeholder="Employer Address" />
-                    </div>
-                </div>
-            </div>
-            <Button
-                onClick={handleSubmit}
-                type="submit"
-                className="w-full"
-                size="lg"
-                variant="neon"
-            >
-                Continue
-            </Button>
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8"
+                >
+                    <FormField
+                        control={form.control}
+                        name="employerName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Employer Name
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Employer Name"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="jobTitle"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Job Title
+                                </FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Job Title" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="employerAddress"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Employer Address
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Employer Address"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button
+                        type="submit"
+                        className="w-full"
+                        size="lg"
+                        variant="neon"
+                    >
+                        Continue
+                    </Button>
+                </form>
+            </Form>
         </div>
     );
 };

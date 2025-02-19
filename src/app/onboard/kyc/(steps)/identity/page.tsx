@@ -1,123 +1,197 @@
 "use client";
 import { Button } from "@/components/ui/button";
-// import { DatePickerForm } from "../components/DatePickerForm";
-import {
-    InputOTP,
-    InputOTPGroup,
-    InputOTPSeparator,
-    InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { StepIndicator } from "../../components/StepIndicator";
-import { Label } from "@/components/ui/label";
 import { useKYC } from "../../context/KYCContext";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { DatePickerForm } from "../../components/DatePickerForm";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { FieldErrors, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { identityFormSchema, type IdentityFormData } from "../../types";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { errorToJSON } from "next/dist/server/render";
 
 const labelClassName = "text-sm font-medium mb-2";
 
 const IdentityPage = () => {
-    const { data, updateData, nextStep, previousStep, isStepValid } = useKYC();
+    const { data, updateStepData, nextStep } = useKYC();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("submitted");
-        // if (isStepValid()) {
-        //     console.log("valid");
-        //     nextStep();
-        // }
+    const form = useForm<IdentityFormData>({
+        resolver: zodResolver(identityFormSchema),
+        defaultValues: {
+            firstName: data.identity.firstName,
+            middleName: data.identity.middleName,
+            lastName: data.identity.lastName,
+            dateOfBirth: data.identity.dateOfBirth,
+            phone: data.identity.phone,
+            ssn: data.identity.ssn,
+        },
+        mode: "onBlur",
+        reValidateMode: "onBlur",
+    });
+
+    const onSubmit = (values: IdentityFormData) => {
+        console.log("Form submitted with values:", values);
+        updateStepData("identity", values, true);
         nextStep();
+    };
+
+    const onError = (errors: FieldErrors<IdentityFormData>) => {
+        console.log("Validation errors:", errors);
     };
 
     return (
         <div className="flex flex-col justify-between w-full h-full">
-            <div className="flex flex-col gap-y-8">
-                <div onSubmit={handleSubmit} className="space-y-8">
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit, onError)}
+                    className="space-y-8"
+                    noValidate
+                >
                     <div className="flex gap-x-2">
-                        <div>
-                            <Label
-                                className={labelClassName}
-                                htmlFor="firstName"
-                            >
-                                First Name
-                            </Label>
-                            <Input type="text" placeholder="First Name" />
-                        </div>
-                        <div>
-                            <Label
-                                className={labelClassName}
-                                htmlFor="lastName"
-                            >
-                                Middle Name{" "}
-                                <span className="text-xs text-neutral">
-                                    (optional)
-                                </span>
-                            </Label>
-                            <Input type="text" placeholder="Middle Name" />
-                        </div>
+                        <FormField
+                            control={form.control}
+                            name="firstName"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel className={labelClassName}>
+                                        First Name
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="First Name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="middleName"
+                            render={({ field }) => (
+                                <FormItem className="w-full">
+                                    <FormLabel className={labelClassName}>
+                                        Middle Name{" "}
+                                        <span className="text-xs text-neutral">
+                                            (optional)
+                                        </span>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Middle Name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
-                    <div>
-                        <Label className={labelClassName} htmlFor="lastName">
-                            Last Name
-                        </Label>
-                        <Input type="text" placeholder="Last Name" />
-                    </div>
-                    <div>
-                        <Label className={labelClassName} htmlFor="lastName">
-                            Date of Birth
-                        </Label>
-                        <DatePickerForm />
-                    </div>
-                </div>
-                {/* todo: phone input is form component */}
-                <div>
-                    <Label
-                        className={labelClassName}
-                        htmlFor="lastName"
-                        defaultValue="US"
-                    >
-                        Phone Number
-                    </Label>
-                    <PhoneInput />
-                </div>
-                <div>
-                    <Label className={labelClassName} htmlFor="ssn">
-                        <div className="flex flex-col">
-                            SSN{" "}
-                            <p className="mb-2 text-xs text-neutral">
-                                SSN is used to help secure your account and
-                                we're legally obliged to ask before opening your
-                                account. Your info is secured with military
-                                grade encryption.
-                            </p>
-                        </div>
-                    </Label>
-                    <Input
-                        type="password"
-                        placeholder="SSN"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        maxLength={9}
+
+                    <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Last Name
+                                </FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Last Name" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                </div>
-            </div>
-            <Button
-                onClick={handleSubmit}
-                type="submit"
-                className="w-full"
-                size="lg"
-                variant="neon"
-            >
-                Continue
-            </Button>
+
+                    <FormField
+                        control={form.control}
+                        name="dateOfBirth"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Date of Birth
+                                </FormLabel>
+                                <FormControl>
+                                    <DatePickerForm
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Phone Number
+                                </FormLabel>
+                                <FormControl>
+                                    <PhoneInput
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="ssn"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    <div className="flex flex-col">
+                                        SSN{" "}
+                                        <p className="mb-2 text-xs text-neutral">
+                                            SSN is used to help secure your
+                                            account and we're legally obliged to
+                                            ask before opening your account.
+                                            Your info is secured with military
+                                            grade encryption.
+                                        </p>
+                                    </div>
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="password"
+                                        placeholder="SSN"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        maxLength={9}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <Button
+                        type="submit"
+                        className="w-full"
+                        size="lg"
+                        variant="neon"
+                    >
+                        Continue
+                    </Button>
+                </form>
+            </Form>
         </div>
     );
 };

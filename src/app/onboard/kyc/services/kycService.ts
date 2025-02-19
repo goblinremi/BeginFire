@@ -1,65 +1,63 @@
-import { KYCData } from "../context/KYCContext";
+import { KYCData } from "../types";
+import {
+    identityFormSchema,
+    employmentFormSchema,
+    financialFormSchema,
+    type KYCSubmitResponse,
+} from "../types";
 
-export async function submitKYCApplication(data: KYCData) {
+export async function submitKYCApplication(
+    data: KYCData
+): Promise<KYCSubmitResponse> {
     try {
-        // Convert files to FormData if needed
         const formData = new FormData();
-
-        // Add all non-file data
         const jsonData = {
-            personalInfo: {
-                firstName: data.firstName,
-                middleName: data.middleName,
-                lastName: data.lastName,
-                email: data.email,
-                phone: data.phone,
-            },
-            identity: {
-                ssn: data.ssn,
-                dateOfBirth: data.dateOfBirth,
-                citizenship: data.citizenship,
-                taxResidency: data.taxResidency,
-            },
-            address: data.residentialAddress,
-            employment: {
-                status: data.employmentStatus,
-                employer: data.employer,
-                occupation: data.occupation,
-                yearsEmployed: data.yearsEmployed,
-                annualIncome: data.annualIncome,
-                sourceOfIncome: data.sourceOfIncome,
-            },
-            investment: {
-                experience: data.investmentExperience,
-                riskTolerance: data.riskTolerance,
-                objectives: data.investmentObjectives,
-                liquidNetWorth: data.liquidNetWorth,
-                totalNetWorth: data.totalNetWorth,
-            },
-            regulatory: {
-                isPoliticallyExposed: data.isPoliticallyExposed,
-                isAffiliatedWithBrokerDealer: data.isAffiliatedWithBrokerDealer,
-                isShareholder: data.isShareholder,
-            },
-            agreements: {
-                hasAcceptedTerms: data.hasAcceptedTerms,
-                hasAcceptedPrivacyPolicy: data.hasAcceptedPrivacyPolicy,
-                hasAcceptedCustomerAgreement: data.hasAcceptedCustomerAgreement,
-                hasAcceptedMarginAgreement: data.hasAcceptedMarginAgreement,
-            },
+            identity: data.identity,
+            employment: data.employment,
+            address: data.address,
+            financial: data.financial,
+            regulatory: data.regulatory,
+            agreements: data.agreements,
         };
+
+        // Validate all form sections
+        const identityValidation = identityFormSchema.safeParse(data.identity);
+        const employmentValidation = employmentFormSchema.safeParse(
+            data.employment
+        );
+        const financialValidation = financialFormSchema.safeParse(
+            data.financial
+        );
+
+        if (!identityValidation.success) {
+            throw new Error("Identity validation failed");
+        }
+
+        if (!employmentValidation.success) {
+            throw new Error("Employment validation failed");
+        }
+
+        if (!financialValidation.success) {
+            throw new Error("Financial validation failed");
+        }
 
         formData.append("data", JSON.stringify(jsonData));
 
         // Add files if they exist
-        if (data.governmentIdFront) {
-            formData.append("governmentIdFront", data.governmentIdFront);
+        if (data.documents.governmentIdFront) {
+            formData.append(
+                "governmentIdFront",
+                data.documents.governmentIdFront
+            );
         }
-        if (data.governmentIdBack) {
-            formData.append("governmentIdBack", data.governmentIdBack);
+        if (data.documents.governmentIdBack) {
+            formData.append(
+                "governmentIdBack",
+                data.documents.governmentIdBack
+            );
         }
-        if (data.proofOfAddress) {
-            formData.append("proofOfAddress", data.proofOfAddress);
+        if (data.documents.proofOfAddress) {
+            formData.append("proofOfAddress", data.documents.proofOfAddress);
         }
 
         const response = await fetch("/api/kyc/submit", {
@@ -71,8 +69,7 @@ export async function submitKYCApplication(data: KYCData) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const result = await response.json();
-        return result;
+        return await response.json();
     } catch (error) {
         console.error("Error submitting KYC application:", error);
         throw error;
