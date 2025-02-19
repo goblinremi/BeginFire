@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { submitKYCApplication } from "../services/kycService";
 import { useToast } from "@/hooks/use-toast";
-
+import { ONBOARDING_STEPS } from "../constants";
 export interface KYCData {
     // Personal Info
     firstName: string;
@@ -73,80 +73,6 @@ interface KYCContextType {
 
 const KYCContext = createContext<KYCContextType | undefined>(undefined);
 
-// Define the steps
-const ONBOARDING_STEPS = [
-    {
-        path: "/onboard/kyc/personal",
-        title: "Personal Info",
-        description: "Basic personal details",
-        fields: ["firstName", "middleName", "lastName", "email", "phone"],
-    },
-    {
-        path: "/onboard/kyc/identity",
-        title: "Identity",
-        description: "Identity verification",
-        fields: ["ssn", "dateOfBirth", "citizenship", "taxResidency"],
-    },
-    {
-        path: "/onboard/kyc/address",
-        title: "Address",
-        description: "Residential address",
-        fields: ["residentialAddress"],
-    },
-    {
-        path: "/onboard/kyc/employment",
-        title: "Employment",
-        description: "Employment information",
-        fields: [
-            "employmentStatus",
-            "employer",
-            "occupation",
-            "yearsEmployed",
-            "annualIncome",
-            "sourceOfIncome",
-        ],
-    },
-    {
-        path: "/onboard/kyc/investment",
-        title: "Investment Profile",
-        description: "Investment experience and goals",
-        fields: [
-            "investmentExperience",
-            "riskTolerance",
-            "investmentObjectives",
-            "liquidNetWorth",
-            "totalNetWorth",
-        ],
-    },
-    {
-        path: "/onboard/kyc/regulatory",
-        title: "Regulatory Questions",
-        description: "Required regulatory information",
-        fields: [
-            "isPoliticallyExposed",
-            "isAffiliatedWithBrokerDealer",
-            "isShareholder",
-        ],
-    },
-    {
-        path: "/onboard/kyc/documents",
-        title: "Document Upload",
-        description: "Required documentation",
-        fields: ["governmentIdFront", "governmentIdBack", "proofOfAddress"],
-    },
-    {
-        path: "/onboard/kyc/agreements",
-        title: "Agreements",
-        description: "Review and accept agreements",
-        fields: [
-            "hasAcceptedTerms",
-            "hasAcceptedPrivacyPolicy",
-            "hasAcceptedCustomerAgreement",
-            "hasAcceptedMarginAgreement",
-        ],
-    },
-] as const;
-
 export function KYCProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
     const { toast } = useToast();
@@ -180,16 +106,16 @@ export function KYCProvider({ children }: { children: ReactNode }) {
         hasAcceptedCustomerAgreement: false,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const getCurrentStepIndex = () => {
-        console.log("getting current step");
-        return 1;
-        // const currentPath = router.asPath;
-        // return ONBOARDING_STEPS.findIndex((step) => currentPath === step.path);
-    };
+    const [currentStep, setCurrentStep] = useState(0);
+    // const getCurrentStepIndex = () => {
+    //     console.log("getting current step");
+    //     return 1;
+    //     // const currentPath = router.asPath;
+    //     // return ONBOARDING_STEPS.findIndex((step) => currentPath === step.path);
+    // };
 
     const isStepValid = () => {
-        const currentStep = getCurrentStepIndex();
+        // const currentStep = getCurrentStepIndex();
 
         switch (currentStep) {
             case 0: // Personal Info
@@ -258,19 +184,18 @@ export function KYCProvider({ children }: { children: ReactNode }) {
     };
 
     const nextStep = () => {
-        console.log("nextStep");
-        if (!isStepValid()) return;
-
-        const currentIndex = getCurrentStepIndex();
-        if (currentIndex < ONBOARDING_STEPS.length - 1) {
-            router.push(ONBOARDING_STEPS[currentIndex + 1].path);
+        // if (!isStepValid()) return;
+        console.log("next step in context");
+        if (currentStep < ONBOARDING_STEPS.length - 1) {
+            console.log("pushing to next step");
+            router.push(ONBOARDING_STEPS[currentStep + 1].path);
+            setCurrentStep(currentStep + 1);
         }
     };
 
     const previousStep = () => {
-        const currentIndex = getCurrentStepIndex();
-        if (currentIndex > 0) {
-            router.push(ONBOARDING_STEPS[currentIndex - 1].path);
+        if (currentStep > 0) {
+            router.push(ONBOARDING_STEPS[currentStep - 1].path);
         }
     };
 
@@ -312,7 +237,7 @@ export function KYCProvider({ children }: { children: ReactNode }) {
         <KYCContext.Provider
             value={{
                 data,
-                currentStep: getCurrentStepIndex(),
+                currentStep,
                 updateData,
                 nextStep,
                 previousStep,

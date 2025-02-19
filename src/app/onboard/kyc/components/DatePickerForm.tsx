@@ -62,7 +62,7 @@ export function DatePickerForm() {
                                         <Button
                                             variant={"outline"}
                                             className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
+                                                "flex font-medium h-13 w-full rounded-lg border-[#D9D9D9] border-[1px] bg-white p-4 text-black transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-placeholder focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-sm justify-start",
                                                 !field.value &&
                                                     "text-muted-foreground"
                                             )}
@@ -70,7 +70,9 @@ export function DatePickerForm() {
                                             {field.value ? (
                                                 format(field.value, "PPP")
                                             ) : (
-                                                <span>Pick a date</span>
+                                                <span className="text-placeholder">
+                                                    Pick a date
+                                                </span>
                                             )}
                                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                         </Button>
@@ -92,10 +94,7 @@ export function DatePickerForm() {
                                     />
                                 </PopoverContent>
                             </Popover>
-                            <FormDescription>
-                                Your date of birth is used to calculate your
-                                age.
-                            </FormDescription>
+
                             <FormMessage />
                         </FormItem>
                     )}

@@ -1,9 +1,8 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { StepIndicator } from "../components/StepIndicator";
 import { Label } from "@/components/ui/label";
-import { useKYC } from "../context/KYCContext";
+import { useKYC } from "../../context/KYCContext";
 import {
     Select,
     SelectContent,
@@ -88,8 +87,7 @@ const AddressPage = () => {
 
     return (
         <div className="space-y-8">
-            <StepIndicator currentStep={2} />
-
+            {/* 
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="grid grid-cols-1 gap-6">
                     <div className="space-y-2">
@@ -172,7 +170,7 @@ const AddressPage = () => {
                         Continue
                     </Button>
                 </div>
-            </form>
+            </form> */}
         </div>
     );
 };

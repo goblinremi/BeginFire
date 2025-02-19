@@ -58,6 +58,26 @@ body {
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
     }
+    h1 {
+        font-size: var(--text-2xl);
+        font-weight: var(--font-weight-semibold);
+        line-height: var(--text-2xl--line-height);
+    }
+    h2 {
+        font-size: var(--text-xl);
+        font-weight: var(--font-weight-semibold);
+        line-height: var(--text-xl--line-height);
+    }
+    h3 {
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        line-height: var(--text-lg--line-height);
+    }
+    h4 {
+        font-size: var(--text-base);
+        font-weight: var(--font-weight-semibold);
+        line-height: var(--text-base--line-height);
+    }
 }
 
 @theme {

@@ -7,7 +7,7 @@ const CompleteMFAPage = () => {
         <div className="w-full py-12 flex flex-col items-center justify-between h-full">
             <div className="h-2/3 text-center mt-12 flex flex-col items-center justify-center">
                 <Icons.solidCheckCircle className="w-14 h-14 text-primary-neon" />
-                <h1 className="mt-6 text-3xl font-semibold">2FA Enabled!</h1>
+                <h1>2FA Enabled!</h1>
                 <p className="mt-2 text-sm text-gray-500">
                     We&apos;ll ask for a code every time you want to log in or
                     withdraw funds in the future.

@@ -8,9 +8,7 @@ export default function StartMFA() {
         <BottomModalLayout>
             <div className="flex flex-col justify-between h-full">
                 <div className="flex flex-col gap-y-2">
-                    <h1 className="text-2xl font-semibold">
-                        Protect your withdrawals by enabling 2FA
-                    </h1>
+                    <h1>Protect your withdrawals by enabling 2FA</h1>
                     <p className="text-sm text-neutral">
                         You&apos;ll need to enter a verification code when
                         logging in and withdrawing funds, making sure only you

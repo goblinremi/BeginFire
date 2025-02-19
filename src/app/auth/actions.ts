@@ -102,14 +102,15 @@ export async function enrollMFA() {
     // create new one
     const { data, error } = await supabase.auth.mfa.enroll({
         factorType: "totp",
-        issuer: "BeginFiretest6",
-        friendlyName: "shoudl be verified6",
+        issuer: "BeginFiretestswyaewewff7yQWDQWefaef8",
+        friendlyName: "shoudl be fverifeawfawefefiseddswDWQD6dd778",
     });
 
     if (error) {
         console.log("ERROR FROM ENROLL MFA IS", error);
         throw error;
     }
+    console.log("DATA FROM ENROLL MFA IS", JSON.stringify(data));
 
     return {
         factorId: data.id,

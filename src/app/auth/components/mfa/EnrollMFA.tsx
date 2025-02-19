@@ -63,14 +63,12 @@ export default function EnrollMFA({ factorId, qrCode, secret }: Props) {
 
     return (
         <div className="w-full flex flex-col items-center justify-center text-center">
-            <p className="font-semibold text-2xl mt-8">
-                Scan the QR Code to enable 2FA
-            </p>
+            <h1 className="mt-8">Scan the QR Code to enable 2FA</h1>
             <p className="text-sm font-medium text-neutral mb-2">
                 Open your authenticator app and choose scan barcode.
             </p>
             <div className="flex justify-center my-10">
-                <Image
+                <img
                     src={qrCode}
                     alt="QR Code"
                     className="w-[170px] h-[170px]"

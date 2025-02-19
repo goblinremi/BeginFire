@@ -13,7 +13,7 @@ const TopNavHeader = ({
             <Link href={backLink}>
                 <Icons.arrowLeft className="w-4 h-4 text-neutral" />
             </Link>
-            <p className="font-semibold">{title}</p>
+            <h4>{title}</h4>
             <Icons.x className="w-4 h-4 text-neutral" />
         </div>
     );

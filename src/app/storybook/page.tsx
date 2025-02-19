@@ -5,7 +5,7 @@ const StorybookPage = () => {
     return (
         <div className="h-screen w-full flex-col gap-y-4 flex items-center justify-center bg-slate-500">
             <div className="flex flex-col gap-4 w-1/3">
-                <h1 className="text-2xl font-bold">Buttons</h1>
+                <h1>Buttons</h1>
                 <div className="flex  flex-col gap-4">
                     <Button size="lg">Click me</Button>
                     <Button size="lg" variant="secondary">
@@ -15,7 +15,7 @@ const StorybookPage = () => {
             </div>
 
             <div className="flex flex-col gap-4 w-1/3">
-                <h1 className="text-2xl font-bold">Inputs</h1>
+                <h1>Inputs</h1>
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-medium">Label</p>
@@ -33,7 +33,7 @@ const StorybookPage = () => {
             </div>
 
             <div className="flex flex-col gap-4 w-1/3">
-                <h1 className="text-2xl font-bold">Security Inputs</h1>
+                <h1>Security Inputs</h1>
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-medium">Label</p>
