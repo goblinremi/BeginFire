@@ -126,9 +126,26 @@ export const financialFormSchema = z.object({
     //     .min(1, "At least one investment objective is required"),
 });
 
+// const affiliationFormSchema = z.object({
+//     affiliation: z.boolean(),
+//     publicCompany: z.boolean(),
+//     pep: z.boolean(),
+// });
+
+export const brokerFormSchema = z.object({
+    customerAgreement: z.boolean().refine((val) => val === true, {
+        message: "You must accept the customer agreement",
+    }),
+    digitalSignature: z.boolean().refine((val) => val === true, {
+        message: "You must provide a digital signature",
+    }),
+});
+
 export type IdentityFormData = z.infer<typeof identityFormSchema>;
 export type EmploymentFormData = z.infer<typeof employmentFormSchema>;
 export type FinancialFormData = z.infer<typeof financialFormSchema>;
+// export type AffiliationFormData = z.infer<typeof affiliationFormSchema>;
+export type BrokerFormData = z.infer<typeof brokerFormSchema>;
 
 export interface AddressFormData {
     street1: string;
@@ -165,8 +182,10 @@ export interface KYCData {
     address: AddressFormData;
     financial: FinancialFormData;
     regulatory: RegulatoryFormData;
+    // affiliation: AffiliationFormData;
     documents: DocumentFormData;
     agreements: AgreementFormData;
+    broker: BrokerFormData;
 }
 
 // Form State Types

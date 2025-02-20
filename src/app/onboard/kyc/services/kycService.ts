@@ -3,6 +3,7 @@ import {
     identityFormSchema,
     employmentFormSchema,
     financialFormSchema,
+    brokerFormSchema,
     type KYCSubmitResponse,
 } from "../types";
 
@@ -18,6 +19,7 @@ export async function submitKYCApplication(
             financial: data.financial,
             regulatory: data.regulatory,
             agreements: data.agreements,
+            broker: data.broker,
         };
 
         // Validate all form sections
@@ -28,7 +30,7 @@ export async function submitKYCApplication(
         const financialValidation = financialFormSchema.safeParse(
             data.financial
         );
-
+        const brokerValidation = brokerFormSchema.safeParse(data.broker);
         if (!identityValidation.success) {
             throw new Error("Identity validation failed");
         }
@@ -39,6 +41,10 @@ export async function submitKYCApplication(
 
         if (!financialValidation.success) {
             throw new Error("Financial validation failed");
+        }
+
+        if (!brokerValidation.success) {
+            throw new Error("Broker validation failed");
         }
 
         formData.append("data", JSON.stringify(jsonData));

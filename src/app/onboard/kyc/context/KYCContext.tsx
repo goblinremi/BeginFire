@@ -48,6 +48,10 @@ const initialKYCData: KYCData = {
         // investmentObjectives: [],
         accountFundingSource: ACCOUNT_FUNDING_SOURCE_OPTIONS[0].value,
     },
+    broker: {
+        customerAgreement: false,
+        digitalSignature: false,
+    },
     regulatory: {
         isPoliticallyExposed: false,
         isAffiliatedWithBrokerDealer: false,
@@ -69,6 +73,7 @@ const initialFormState: KYCFormState = {
     regulatory: { isValid: false, isSubmitted: false, data: null },
     documents: { isValid: false, isSubmitted: false, data: null },
     agreements: { isValid: false, isSubmitted: false, data: null },
+    broker: { isValid: false, isSubmitted: false, data: null },
 };
 
 export function KYCProvider({ children }: { children: ReactNode }) {

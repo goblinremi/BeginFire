@@ -3,6 +3,7 @@ import {
     identityFormSchema,
     employmentFormSchema,
     financialFormSchema,
+    brokerFormSchema,
     type KYCSubmitResponse,
 } from "@/app/onboard/kyc/types";
 
@@ -19,11 +20,12 @@ export async function POST(request: Request) {
         const financialValidation = financialFormSchema.safeParse(
             data.financial
         );
-
+        const brokerValidation = brokerFormSchema.safeParse(data.broker);
         if (
             !identityValidation.success ||
             !employmentValidation.success ||
-            !financialValidation.success
+            !financialValidation.success ||
+            !brokerValidation.success
         ) {
             const response: KYCSubmitResponse = {
                 success: false,
