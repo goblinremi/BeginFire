@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/form";
 import { errorToJSON } from "next/dist/server/render";
 
+import Autocomplete from "react-google-autocomplete";
+import Camera from "../../components/Camera";
+
 const labelClassName = "text-sm font-medium mb-2";
 
 const IdentityPage = () => {
@@ -181,7 +184,17 @@ const IdentityPage = () => {
                             </FormItem>
                         )}
                     />
+                    <Autocomplete
+                        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+                        onPlaceSelected={(place) => console.log(place)}
+                        options={{
+                            types: ["street_address"],
+                            componentRestrictions: { country: "us" },
+                        }}
+                        className="w-full"
+                    />
 
+                    <Camera />
                     <Button
                         type="submit"
                         className="w-full"

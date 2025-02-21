@@ -76,7 +76,6 @@ const FormItem = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-    // "use no memo";
     const id = React.useId();
 
     return (
@@ -151,7 +150,6 @@ const FormMessage = React.forwardRef<
     HTMLParagraphElement,
     React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
-    // "use no memo";
     const { error, formMessageId } = useFormField();
     const body = error ? String(error?.message) : children;
 
