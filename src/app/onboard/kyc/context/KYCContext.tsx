@@ -28,16 +28,18 @@ const initialKYCData: KYCData = {
         phone: "",
         ssn: "",
         dateOfBirth: new Date(),
+        address: {
+            street1: "",
+            street2: "",
+            city: "",
+            state: "",
+            zipCode: "",
+        },
+        address2: "",
+        formattedAddress: "",
     },
     employment: {
         employmentStatus: "",
-    },
-    address: {
-        street1: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        country: "",
     },
     financial: {
         employmentStatus: EMPLOYMENT_STATUS_OPTIONS[0].value,

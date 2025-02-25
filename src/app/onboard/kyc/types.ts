@@ -47,6 +47,14 @@ export const identityFormSchema = z.object({
         .min(9, "SSN must be 9 digits")
         .max(9, "SSN must be 9 digits")
         .regex(/^[0-9]+$/, "SSN must contain only numbers"),
+    address: z.object({
+        street1: z.string().min(1, "Street address is required"),
+        city: z.string().min(1, "City is required"),
+        state: z.string().min(1, "State is required"),
+        zipCode: z.string().min(1, "Zip code is required"),
+    }),
+    formattedAddress: z.string().min(1, "Formatted address is required"),
+    address2: z.string().optional(),
 });
 
 export const employmentFormSchema = z.object({

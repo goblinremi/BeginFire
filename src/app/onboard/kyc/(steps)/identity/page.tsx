@@ -17,9 +17,8 @@ import {
 } from "@/components/ui/form";
 import { errorToJSON } from "next/dist/server/render";
 
-import Autocomplete from "react-google-autocomplete";
 import Camera from "../../components/Camera";
-
+import AddressAutocomplete from "../../components/AddressAutocomplete";
 const labelClassName = "text-sm font-medium mb-2";
 
 const IdentityPage = () => {
@@ -34,6 +33,9 @@ const IdentityPage = () => {
             dateOfBirth: data.identity.dateOfBirth,
             phone: data.identity.phone,
             ssn: data.identity.ssn,
+            address: data.identity.address,
+            address2: data.identity.address2,
+            formattedAddress: data.identity.formattedAddress,
         },
         mode: "onBlur",
         reValidateMode: "onBlur",
@@ -184,16 +186,63 @@ const IdentityPage = () => {
                             </FormItem>
                         )}
                     />
-                    <Autocomplete
-                        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-                        onPlaceSelected={(place) => console.log(place)}
-                        options={{
-                            types: ["street_address"],
-                            componentRestrictions: { country: "us" },
-                        }}
-                        className="w-full"
+
+                    <FormField
+                        control={form.control}
+                        name="formattedAddress"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Address
+                                </FormLabel>
+                                <FormControl>
+                                    <AddressAutocomplete
+                                        onPlaceSelect={(place) => {
+                                            form.setValue("address", {
+                                                street1: place.name,
+                                                city: place
+                                                    .address_components[3]
+                                                    .long_name,
+                                                state: place
+                                                    .address_components[5]
+                                                    .long_name,
+                                                zipCode:
+                                                    place.address_components[7]
+                                                        .long_name,
+                                            });
+                                            form.setValue(
+                                                "formattedAddress",
+                                                place.formatted_address
+                                            );
+                                        }}
+                                        formattedAddress={form.getValues(
+                                            "formattedAddress"
+                                        )}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
 
+                    <FormField
+                        control={form.control}
+                        name="address2"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Apartment, suite, etc.
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Address Line 2"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                     <Camera />
                     <Button
                         type="submit"
