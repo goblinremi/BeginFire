@@ -58,12 +58,16 @@ export const identityFormSchema = z.object({
 });
 
 export const employmentFormSchema = z.object({
-    employmentStatus: z.string().min(1, "Employment status is required"),
     employer: z.string().optional(),
-    occupation: z.string().optional(),
-    yearsEmployed: z.number().optional(),
-    annualIncome: z.string().optional(),
-    sourceOfIncome: z.array(z.string()).optional(),
+    jobTitle: z.string().optional(),
+    address: z.object({
+        street1: z.string().min(1, "Street address is required"),
+        city: z.string().min(1, "City is required"),
+        state: z.string().min(1, "State is required"),
+        zipCode: z.string().min(1, "Zip code is required"),
+    }),
+    formattedAddress: z.string().min(1, "Formatted address is required"),
+    address2: z.string().optional(),
 });
 
 // Define the literal types from our constants
@@ -155,15 +159,6 @@ export type FinancialFormData = z.infer<typeof financialFormSchema>;
 // export type AffiliationFormData = z.infer<typeof affiliationFormSchema>;
 export type BrokerFormData = z.infer<typeof brokerFormSchema>;
 
-export interface AddressFormData {
-    street1: string;
-    street2?: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-}
-
 export interface RegulatoryFormData {
     isPoliticallyExposed: boolean;
     isAffiliatedWithBrokerDealer: boolean;
@@ -187,7 +182,6 @@ export interface AgreementFormData {
 export interface KYCData {
     identity: IdentityFormData;
     employment: EmploymentFormData;
-    address: AddressFormData;
     financial: FinancialFormData;
     regulatory: RegulatoryFormData;
     // affiliation: AffiliationFormData;

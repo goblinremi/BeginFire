@@ -30,7 +30,6 @@ const initialKYCData: KYCData = {
         dateOfBirth: new Date(),
         address: {
             street1: "",
-            street2: "",
             city: "",
             state: "",
             zipCode: "",
@@ -39,7 +38,16 @@ const initialKYCData: KYCData = {
         formattedAddress: "",
     },
     employment: {
-        employmentStatus: "",
+        employer: "",
+        jobTitle: "",
+        address: {
+            street1: "",
+            city: "",
+            state: "",
+            zipCode: "",
+        },
+        formattedAddress: "",
+        address2: "",
     },
     financial: {
         employmentStatus: EMPLOYMENT_STATUS_OPTIONS[0].value,

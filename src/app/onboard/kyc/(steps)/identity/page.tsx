@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { errorToJSON } from "next/dist/server/render";
 
-import Camera from "../../components/Camera";
 import AddressAutocomplete from "../../components/AddressAutocomplete";
 const labelClassName = "text-sm font-medium mb-2";
 
@@ -243,7 +242,6 @@ const IdentityPage = () => {
                             </FormItem>
                         )}
                     />
-                    <Camera />
                     <Button
                         type="submit"
                         className="w-full"

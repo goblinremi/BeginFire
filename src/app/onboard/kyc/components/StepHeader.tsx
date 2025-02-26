@@ -9,7 +9,7 @@ export function StepHeader() {
     const currentStepConfig = KYC_STEPS[currentStep];
 
     return (
-        <header className="border-b-1 border-offwhite p-4 flex items-center px-4 py-2 justify-between">
+        <header className="fixed top-0 left-0 right-0 border-b-1 border-offwhite bg-white p-4 flex items-center px-4 py-2 justify-between">
             {currentStep > 0 ? (
                 <Icons.arrowLeft
                     onClick={previousStep}

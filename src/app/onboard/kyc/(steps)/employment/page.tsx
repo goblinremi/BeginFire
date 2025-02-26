@@ -12,27 +12,27 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { useKYC } from "../../context/KYCContext";
-import { employmentFormSchema, type EmploymentFormValues } from "../../types";
+import { employmentFormSchema, type EmploymentFormData } from "../../types";
+import AddressAutocomplete from "../../components/AddressAutocomplete";
 
 const labelClassName = "text-sm font-medium mb-2";
 
 const EmploymentPage = () => {
     const { data, updateStepData, nextStep } = useKYC();
 
-    const form = useForm<EmploymentFormValues>({
+    const form = useForm<EmploymentFormData>({
         resolver: zodResolver(employmentFormSchema),
         defaultValues: {
-            employmentStatus: data.employment.employmentStatus,
             employer: data.employment.employer,
-            occupation: data.employment.occupation,
-            yearsEmployed: data.employment.yearsEmployed,
-            annualIncome: data.employment.annualIncome,
-            sourceOfIncome: data.employment.sourceOfIncome,
+            jobTitle: data.employment.jobTitle,
+            address: data.employment.address,
+            formattedAddress: data.employment.formattedAddress,
+            address2: data.employment.address2,
         },
         mode: "onSubmit",
     });
 
-    const onSubmit = (values: EmploymentFormValues) => {
+    const onSubmit = (values: EmploymentFormData) => {
         updateStepData("employment", values, true);
         nextStep();
     };
@@ -46,7 +46,7 @@ const EmploymentPage = () => {
                 >
                     <FormField
                         control={form.control}
-                        name="employerName"
+                        name="employer"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className={labelClassName}>
@@ -79,15 +79,53 @@ const EmploymentPage = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="employerAddress"
+                        name="formattedAddress"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className={labelClassName}>
-                                    Employer Address
+                                    Address
+                                </FormLabel>
+                                <FormControl>
+                                    <AddressAutocomplete
+                                        onPlaceSelect={(place) => {
+                                            form.setValue("address", {
+                                                street1: place.name,
+                                                city: place
+                                                    .address_components[3]
+                                                    .long_name,
+                                                state: place
+                                                    .address_components[5]
+                                                    .long_name,
+                                                zipCode:
+                                                    place.address_components[7]
+                                                        .long_name,
+                                            });
+                                            form.setValue(
+                                                "formattedAddress",
+                                                place.formatted_address
+                                            );
+                                        }}
+                                        formattedAddress={form.getValues(
+                                            "formattedAddress"
+                                        )}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address2"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className={labelClassName}>
+                                    Apartment, suite, etc.
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="Employer Address"
+                                        placeholder="Address Line 2"
                                         {...field}
                                     />
                                 </FormControl>
