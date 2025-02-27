@@ -42,100 +42,106 @@ const EmploymentPage = () => {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-8"
+                    className="h-full flex flex-col justify-between"
                 >
-                    <FormField
-                        control={form.control}
-                        name="employer"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className={labelClassName}>
-                                    Employer Name
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Employer Name"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="jobTitle"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className={labelClassName}>
-                                    Job Title
-                                </FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Job Title" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="formattedAddress"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className={labelClassName}>
-                                    Address
-                                </FormLabel>
-                                <FormControl>
-                                    <AddressAutocomplete
-                                        onPlaceSelect={(place) => {
-                                            form.setValue("address", {
-                                                street1: place.name,
-                                                city: place
-                                                    .address_components[3]
-                                                    .long_name,
-                                                state: place
-                                                    .address_components[5]
-                                                    .long_name,
-                                                zipCode:
-                                                    place.address_components[7]
+                    <div className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="employer"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className={labelClassName}>
+                                        Employer Name
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Employer Name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="jobTitle"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className={labelClassName}>
+                                        Job Title
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Job Title"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="formattedAddress"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className={labelClassName}>
+                                        Address
+                                    </FormLabel>
+                                    <FormControl>
+                                        <AddressAutocomplete
+                                            onPlaceSelect={(place) => {
+                                                form.setValue("address", {
+                                                    street1: place.name,
+                                                    city: place
+                                                        .address_components[3]
                                                         .long_name,
-                                            });
-                                            form.setValue(
-                                                "formattedAddress",
-                                                place.formatted_address
-                                            );
-                                        }}
-                                        formattedAddress={form.getValues(
-                                            "formattedAddress"
-                                        )}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                                                    state: place
+                                                        .address_components[5]
+                                                        .long_name,
+                                                    zipCode:
+                                                        place
+                                                            .address_components[7]
+                                                            .long_name,
+                                                });
+                                                form.setValue(
+                                                    "formattedAddress",
+                                                    place.formatted_address
+                                                );
+                                            }}
+                                            formattedAddress={form.getValues(
+                                                "formattedAddress"
+                                            )}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="address2"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className={labelClassName}>
-                                    Apartment, suite, etc.
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Address Line 2"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            control={form.control}
+                            name="address2"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className={labelClassName}>
+                                        Apartment, suite, etc.
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Address Line 2"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full "
                         size="lg"
                         variant="neon"
                     >

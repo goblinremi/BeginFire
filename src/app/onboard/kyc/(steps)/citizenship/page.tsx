@@ -17,8 +17,7 @@ import { brokerFormSchema, type BrokerFormData } from "../../types";
 const labelClassName = "text-sm font-medium mb-2 text-neutral";
 
 const BrokerPage = () => {
-    const { data, updateStepData, nextStep, submitApplication, isSubmitting } =
-        useKYC();
+    const { data, updateStepData, nextStep } = useKYC();
 
     const form = useForm<BrokerFormData>({
         resolver: zodResolver(brokerFormSchema),
@@ -31,7 +30,7 @@ const BrokerPage = () => {
 
     const onSubmit = (values: BrokerFormData) => {
         updateStepData("broker", values, true);
-        submitApplication();
+        nextStep();
     };
 
     const onError = (errors: FieldErrors<BrokerFormData>) => {
@@ -58,27 +57,8 @@ const BrokerPage = () => {
                                         />
                                     </FormControl>
                                     <FormLabel className={labelClassName}>
-                                        I have read and understand the{" "}
-                                        <a
-                                            className="text-blue-500 underline"
-                                            href="https://files.alpaca.markets/disclosures/library/AcctAppMarginAndCustAgmt.pdf"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            Alpaca Customer Agreement
-                                        </a>
-                                        <p className="mt-2">
-                                            I have read, understand, and agree
-                                            to be bound by Alpaca Securities LLC
-                                            and beginFIRE account terms, and all
-                                            other terms, disclosures, and
-                                            disclaimers applicable to me, as
-                                            referenced in the Alpaca Customer
-                                            Agreement. I also acknowledge that
-                                            the Alpaca Customer Agreement
-                                            contains a pre-dispute arbitration
-                                            clause in Section 43.
-                                        </p>
+                                        By checking this box, I am confirming I
+                                        am a tax resident of the United States.
                                     </FormLabel>
                                 </div>
                                 <FormMessage />
@@ -99,12 +79,8 @@ const BrokerPage = () => {
                                         />
                                     </FormControl>
                                     <FormLabel className={labelClassName}>
-                                        By checking this box, I understand I am
-                                        signing this agreement electronically,
-                                        and that my electronic signature will
-                                        have the same effect as physically
-                                        signing and returning the Application
-                                        Agreement.
+                                        By checking this box, I am confirming I
+                                        am a citizen of the United States.
                                     </FormLabel>
                                 </div>
                                 <FormMessage />
@@ -119,7 +95,7 @@ const BrokerPage = () => {
                     size="lg"
                     variant="neon"
                 >
-                    {isSubmitting ? "Submitting..." : "Submit"}
+                    Agree to Terms
                 </Button>
             </form>
         </Form>

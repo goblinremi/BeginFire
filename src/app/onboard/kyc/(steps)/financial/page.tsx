@@ -61,7 +61,7 @@ const FinancialPage = () => {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit, onError)}
-                className="h-full justify-between flex flex-col"
+                className="flex flex-col"
             >
                 <div className="space-y-8">
                     <div>
@@ -284,16 +284,15 @@ const FinancialPage = () => {
                     /> */}
 
                     {/* TODO: Add multi-select for investment objectives */}
+                    <Button
+                        type="submit"
+                        className="w-full mb-12"
+                        size="lg"
+                        variant="neon"
+                    >
+                        Continue
+                    </Button>
                 </div>
-
-                <Button
-                    type="submit"
-                    className="w-full"
-                    size="lg"
-                    variant="neon"
-                >
-                    Continue
-                </Button>
             </form>
         </Form>
     );

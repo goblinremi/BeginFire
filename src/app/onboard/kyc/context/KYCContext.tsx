@@ -36,6 +36,8 @@ const initialKYCData: KYCData = {
         },
         address2: "",
         formattedAddress: "",
+        countryOfTaxResidence: false,
+        countryOfCitizenship: false,
     },
     employment: {
         employer: "",
@@ -58,32 +60,34 @@ const initialKYCData: KYCData = {
         // investmentObjectives: [],
         accountFundingSource: ACCOUNT_FUNDING_SOURCE_OPTIONS[0].value,
     },
+    affiliations: {
+        affiliatedWithBrokerDealer: false,
+        isShareholderOrSeniorExecutive: false,
+        isSeniorPoliticalFigure: false,
+        isFamilyMemberOfSeniorPoliticalFigure: false,
+        isNoneOfTheAbove: false,
+    },
     broker: {
         customerAgreement: false,
         digitalSignature: false,
     },
-    regulatory: {
-        isPoliticallyExposed: false,
-        isAffiliatedWithBrokerDealer: false,
-        isShareholder: false,
-    },
     documents: {},
-    agreements: {
-        hasAcceptedTerms: false,
-        hasAcceptedPrivacyPolicy: false,
-        hasAcceptedCustomerAgreement: false,
+    idVerificationIntro: {},
+    idVerification: {
+        governmentIdFront: {} as File,
+        governmentIdBack: {} as File,
     },
 };
 
 const initialFormState: KYCFormState = {
     identity: { isValid: false, isSubmitted: false, data: null },
     employment: { isValid: false, isSubmitted: false, data: null },
-    address: { isValid: false, isSubmitted: false, data: null },
     financial: { isValid: false, isSubmitted: false, data: null },
-    regulatory: { isValid: false, isSubmitted: false, data: null },
-    documents: { isValid: false, isSubmitted: false, data: null },
-    agreements: { isValid: false, isSubmitted: false, data: null },
+    affiliations: { isValid: false, isSubmitted: false, data: null },
+    idVerificationIntro: { isValid: false, isSubmitted: false, data: null },
+    idVerification: { isValid: false, isSubmitted: false, data: null },
     broker: { isValid: false, isSubmitted: false, data: null },
+    documents: { isValid: false, isSubmitted: false, data: null },
 };
 
 export function KYCProvider({ children }: { children: ReactNode }) {
@@ -112,6 +116,7 @@ export function KYCProvider({ children }: { children: ReactNode }) {
             ...prev,
             [step]: { ...prev[step], ...stepData },
         }));
+        debugger;
     };
 
     const nextStep = () => {

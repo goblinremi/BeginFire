@@ -1,27 +1,26 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import { Icons } from "@/components/ui/icons";
 export default function SuccessPage() {
     const router = useRouter();
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="max-w-md w-full space-y-8 p-6">
+        <div className="py-12 px-4 h-full flex flex-col items-center justify-between">
+            <div className="mt-20 space-y-8">
                 <div className="text-center space-y-4">
-                    <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
+                    <Icons.solidCheckCircle className="mx-auto h-14 w-14 text-primary-neon" />
                     <h2 className="text-3xl font-bold text-gray-900">
-                        Application Submitted
+                        Successfully submitted!
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-neutral text-sm">
                         Thank you for completing your KYC application. We will
                         review your information and get back to you shortly.
                     </p>
                 </div>
 
                 <div className="space-y-4">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-neutral">
                         <p>What happens next?</p>
                         <ul className="list-disc list-inside mt-2 space-y-2">
                             <li>Our team will review your application</li>
@@ -35,15 +34,16 @@ export default function SuccessPage() {
                             </li>
                         </ul>
                     </div>
-
-                    <Button
-                        className="w-full"
-                        onClick={() => router.push("/dashboard")}
-                    >
-                        Go to Dashboard
-                    </Button>
                 </div>
             </div>
+            <Button
+                variant="neon"
+                size="lg"
+                className="w-full"
+                onClick={() => router.push("/dashboard")}
+            >
+                Go to Dashboard
+            </Button>
         </div>
     );
 }

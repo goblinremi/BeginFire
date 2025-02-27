@@ -15,12 +15,11 @@ export async function submitKYCApplication(
         const jsonData = {
             identity: data.identity,
             employment: data.employment,
-            address: data.address,
             financial: data.financial,
-            regulatory: data.regulatory,
-            agreements: data.agreements,
             broker: data.broker,
+            idVerification: data.idVerification,
         };
+        debugger;
 
         // Validate all form sections
         const identityValidation = identityFormSchema.safeParse(data.identity);
@@ -30,6 +29,7 @@ export async function submitKYCApplication(
         const financialValidation = financialFormSchema.safeParse(
             data.financial
         );
+        // broker is failing right now because it is the last step and the state is not updated
         const brokerValidation = brokerFormSchema.safeParse(data.broker);
         if (!identityValidation.success) {
             throw new Error("Identity validation failed");

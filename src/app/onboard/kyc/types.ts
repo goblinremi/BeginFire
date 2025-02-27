@@ -55,6 +55,12 @@ export const identityFormSchema = z.object({
     }),
     formattedAddress: z.string().min(1, "Formatted address is required"),
     address2: z.string().optional(),
+    countryOfTaxResidence: z.boolean().refine((val) => val === true, {
+        message: "You must be a US tax resident",
+    }),
+    countryOfCitizenship: z.boolean().refine((val) => val === true, {
+        message: "You must be a US citizen",
+    }),
 });
 
 export const employmentFormSchema = z.object({
@@ -138,11 +144,26 @@ export const financialFormSchema = z.object({
     //     .min(1, "At least one investment objective is required"),
 });
 
-// const affiliationFormSchema = z.object({
-//     affiliation: z.boolean(),
-//     publicCompany: z.boolean(),
-//     pep: z.boolean(),
-// });
+export const affiliationsFormSchema = z.object({
+    affiliatedWithBrokerDealer: z.boolean().refine((val) => val === false, {
+        message: "You must not be affiliated with a broker dealer",
+    }),
+    isShareholderOrSeniorExecutive: z.boolean().refine((val) => val === false, {
+        message: "You must not be a shareholder or senior executive",
+    }),
+    isSeniorPoliticalFigure: z.boolean().refine((val) => val === false, {
+        message: "You must not be a senior political figure",
+    }),
+    isFamilyMemberOfSeniorPoliticalFigure: z
+        .boolean()
+        .refine((val) => val === false, {
+            message:
+                "You must not be a family member of a senior political figure",
+        }),
+    isNoneOfTheAbove: z.boolean().refine((val) => val === true, {
+        message: "You must not be any of the above",
+    }),
+});
 
 export const brokerFormSchema = z.object({
     customerAgreement: z.boolean().refine((val) => val === true, {
@@ -153,40 +174,41 @@ export const brokerFormSchema = z.object({
     }),
 });
 
+export const idVerificationIntroFormSchema = z.object({});
+
+export const idVerificationFormSchema = z.object({
+    governmentIdFront: z.instanceof(File),
+    governmentIdBack: z.instanceof(File),
+});
+
+// export const citizenshipFormSchema = z.object({
+//     countryOfTaxResidence: z.boolean().refine((val) => val === true, {
+//         message: "You must be a US tax resident",
+//     }),
+//     countryOfCitizenship: z.boolean().refine((val) => val === true, {
+//         message: "You must be a US citizen",
+//     }),
+// });
+
 export type IdentityFormData = z.infer<typeof identityFormSchema>;
 export type EmploymentFormData = z.infer<typeof employmentFormSchema>;
 export type FinancialFormData = z.infer<typeof financialFormSchema>;
-// export type AffiliationFormData = z.infer<typeof affiliationFormSchema>;
+export type AffiliationsFormData = z.infer<typeof affiliationsFormSchema>;
 export type BrokerFormData = z.infer<typeof brokerFormSchema>;
-
-export interface RegulatoryFormData {
-    isPoliticallyExposed: boolean;
-    isAffiliatedWithBrokerDealer: boolean;
-    isShareholder: boolean;
-}
-
-export interface DocumentFormData {
-    governmentIdFront?: File;
-    governmentIdBack?: File;
-    proofOfAddress?: File;
-}
-
-export interface AgreementFormData {
-    hasAcceptedTerms: boolean;
-    hasAcceptedPrivacyPolicy: boolean;
-    hasAcceptedCustomerAgreement: boolean;
-    hasAcceptedMarginAgreement?: boolean;
-}
+export type IdVerificationIntroFormData = z.infer<
+    typeof idVerificationIntroFormSchema
+>;
+export type IdVerificationFormData = z.infer<typeof idVerificationFormSchema>;
+// export type CitizenshipFormData = z.infer<typeof citizenshipFormSchema>;
 
 // Combined KYC Data Type
 export interface KYCData {
     identity: IdentityFormData;
     employment: EmploymentFormData;
     financial: FinancialFormData;
-    regulatory: RegulatoryFormData;
-    // affiliation: AffiliationFormData;
-    documents: DocumentFormData;
-    agreements: AgreementFormData;
+    idVerificationIntro: IdVerificationIntroFormData;
+    idVerification: IdVerificationFormData;
+    affiliations: AffiliationsFormData;
     broker: BrokerFormData;
 }
 

@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
+const instrumentSans = Instrument_Sans({
     subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
+    display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,9 +19,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
+            <body className={`${instrumentSans.className} antialiased`}>
                 <div className="h-screen flex justify-center items-center max-w-full overflow-y-scroll">
                     <div className="md:w-[600px] h-full w-full">{children}</div>
                     {/* temp for mobile force to desktop */}

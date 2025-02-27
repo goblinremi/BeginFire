@@ -18,6 +18,7 @@ import {
 import { errorToJSON } from "next/dist/server/render";
 
 import AddressAutocomplete from "../../components/AddressAutocomplete";
+import { Checkbox } from "@/components/ui/checkbox";
 const labelClassName = "text-sm font-medium mb-2";
 
 const IdentityPage = () => {
@@ -242,9 +243,56 @@ const IdentityPage = () => {
                             </FormItem>
                         )}
                     />
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="countryOfTaxResidence"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col items-start space-x-3 space-y-0">
+                                    <div className="flex flex-row items-start space-x-3 space-y-0">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        <FormLabel className={labelClassName}>
+                                            By checking this box, I am
+                                            confirming I am a tax resident of
+                                            the United States.
+                                        </FormLabel>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="countryOfCitizenship"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col items-start space-x-3 space-y-0">
+                                    <div className="flex flex-row items-start space-x-3 space-y-0">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        <FormLabel className={labelClassName}>
+                                            By checking this box, I am
+                                            confirming I am a citizen of the
+                                            United States.
+                                        </FormLabel>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full mb-12"
                         size="lg"
                         variant="neon"
                     >
