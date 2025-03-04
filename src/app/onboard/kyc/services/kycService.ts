@@ -73,23 +73,63 @@ export async function submitKYCApplication(
         formData.append("data", JSON.stringify(jsonData));
         debugger;
 
-        // // Add files if they exist
-        // if (data.documents.governmentIdFront) {
-        //     formData.append(
-        //         "governmentIdFront",
-        //         data.documents.governmentIdFront
-        //     );
-        // }
-        // if (data.documents.governmentIdBack) {
-        //     formData.append(
-        //         "governmentIdBack",
-        //         data.documents.governmentIdBack
-        //     );
-        // }
-        // if (data.documents.proofOfAddress) {
-        //     formData.append("proofOfAddress", data.documents.proofOfAddress);
-        // }
-
+        // const testData = {
+        //     identity: {
+        //         firstName: "Jenny",
+        //         lastName: "Peng",
+        //         middleName: "",
+        //         phone: "+15302048623",
+        //         ssn: "605804273",
+        //         dateOfBirth: "1994-03-04T19:35:57.772Z",
+        //         address: {
+        //             street1: "4026 Alegre Way",
+        //             city: "Davis",
+        //             state: "California",
+        //             zipCode: "95618",
+        //         },
+        //         address2: "2",
+        //         formattedAddress: "4026 Alegre Way, Davis, CA 95618, USA",
+        //         countryOfTaxResidence: true,
+        //         countryOfCitizenship: true,
+        //     },
+        //     employment: {
+        //         employer: "Augminted",
+        //         jobTitle: "Dev",
+        //         address: {
+        //             street1: "4026 Alegre Way",
+        //             city: "Davis",
+        //             state: "California",
+        //             zipCode: "95618",
+        //         },
+        //         formattedAddress: "4026 Alegre Way, Davis, CA 95618, USA",
+        //         address2: "1",
+        //     },
+        //     financial: {
+        //         employmentStatus: "employed",
+        //         householdIncome: "0-20000",
+        //         investibleAssets: "0-20000",
+        //         investmentExperience: "none",
+        //         accountFundingSource: "employment_income",
+        //     },
+        //     broker: {
+        //         customerAgreement: true,
+        //         digitalSignature: true,
+        //     },
+        //     idVerification: {
+        //         governmentIdFront: {},
+        //         governmentIdBack: {},
+        //     },
+        //     affiliations: {
+        //         affiliatedWithBrokerDealer: false,
+        //         isShareholderOrSeniorExecutive: false,
+        //         isSeniorPoliticalFigure: false,
+        //         isFamilyMemberOfSeniorPoliticalFigure: false,
+        //         isNoneOfTheAbove: true,
+        //     },
+        // };
+        // const formData = new FormData();
+        // formData.append("data", JSON.stringify(testData));
+        // debugger;
         const response = await fetch("/api/kyc/submit", {
             method: "POST",
             body: formData,

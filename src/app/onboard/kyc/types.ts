@@ -177,8 +177,12 @@ export const brokerFormSchema = z.object({
 export const idVerificationIntroFormSchema = z.object({});
 
 export const idVerificationFormSchema = z.object({
-    governmentIdFront: z.instanceof(File),
-    governmentIdBack: z.instanceof(File),
+    governmentId: z.object({
+        content: z.string(),
+        mime_type: z.string(),
+    }),
+    // governmentIdFront: z.instanceof(File),
+    // governmentIdBack: z.instanceof(File),
 });
 
 // export const citizenshipFormSchema = z.object({

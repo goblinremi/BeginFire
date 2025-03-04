@@ -71,11 +71,15 @@ const initialKYCData: KYCData = {
         customerAgreement: false,
         digitalSignature: false,
     },
-    documents: {},
+    // documents: {},
     idVerificationIntro: {},
     idVerification: {
-        governmentIdFront: {} as File,
-        governmentIdBack: {} as File,
+        governmentId: {
+            content: "",
+            mime_type: "",
+        },
+        // governmentIdFront: {} as File,
+        // governmentIdBack: {} as File,
     },
 };
 
@@ -87,7 +91,7 @@ const initialFormState: KYCFormState = {
     idVerificationIntro: { isValid: false, isSubmitted: false, data: null },
     idVerification: { isValid: false, isSubmitted: false, data: null },
     broker: { isValid: false, isSubmitted: false, data: null },
-    documents: { isValid: false, isSubmitted: false, data: null },
+    // documents: { isValid: false, isSubmitted: false, data: null },
 };
 
 export function KYCProvider({ children }: { children: ReactNode }) {
@@ -116,6 +120,7 @@ export function KYCProvider({ children }: { children: ReactNode }) {
             const newData = { ...prev };
             newData[step] = { ...prev[step], ...stepData };
             if (step === "broker") {
+                // being called twice for some reason
                 debugger;
                 submitApplication(newData);
             }

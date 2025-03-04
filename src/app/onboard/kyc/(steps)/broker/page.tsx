@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { useKYC } from "../../context/KYCContext";
 import { brokerFormSchema, type BrokerFormData } from "../../types";
+import { submitKYCApplication } from "../../services/kycService";
 
 const labelClassName = "text-sm font-medium mb-2 text-neutral";
 
@@ -119,6 +120,15 @@ const BrokerPage = () => {
                     variant="neon"
                 >
                     {isSubmitting ? "Submitting..." : "Submit"}
+                </Button>
+
+                <Button
+                    onClick={submitKYCApplication}
+                    className="w-full"
+                    size="lg"
+                    variant="neon"
+                >
+                    test
                 </Button>
             </form>
         </Form>

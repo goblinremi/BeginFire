@@ -21,56 +21,106 @@ import {
 
 const labelClassName = "text-sm font-medium mb-2";
 
+interface DocumentData {
+    content: string;
+    mime_type: string;
+}
+
 const IdVerificationPage = () => {
     const { data, updateStepData, nextStep } = useKYC();
-    const [showCamera, setShowCamera] = useState<{
-        governmentIdFront?: boolean;
-        governmentIdBack?: boolean;
-    }>({});
+    const [showCamera, setShowCamera] = useState(false);
     const [previews, setPreviews] = useState<{
         [K in keyof IdVerificationFormData]?: string;
     }>({});
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const form = useForm<IdVerificationFormData>({
         resolver: zodResolver(idVerificationFormSchema),
         defaultValues: {
-            governmentIdFront: data.idVerification.governmentIdFront,
-            governmentIdBack: data.idVerification.governmentIdBack,
+            governmentId: data.idVerification.governmentId,
+            // governmentIdFront: data.idVerification.governmentIdFront,
+            // governmentIdBack: data.idVerification.governmentIdBack,
         },
     });
 
     const onSubmit = (values: IdVerificationFormData) => {
-        debugger;
         updateStepData("idVerification", values, true);
         nextStep();
+    };
+
+    const convertToBase64 = (file: File): Promise<DocumentData> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64String = reader.result as string;
+                // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
+                const base64Content = base64String.split(",")[1];
+                resolve({
+                    content: base64Content,
+                    mime_type: file.type,
+                });
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
     };
 
     const handleFileUpload = async (
         field: keyof IdVerificationFormData,
         file: File
     ) => {
-        const preview = URL.createObjectURL(file);
-        setPreviews((prev) => ({ ...prev, [field]: preview }));
-        form.setValue(field, file);
+        try {
+            setIsProcessing(true);
+            const preview = URL.createObjectURL(file);
+            setPreviews((prev) => ({ ...prev, [field]: preview }));
+
+            const documentData = await convertToBase64(file);
+            debugger;
+            form.setValue(field, documentData as any);
+        } catch (error) {
+            console.error("Error processing file:", error);
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     const handleCapture = (
         field: keyof IdVerificationFormData,
         imageData: string
     ) => {
-        fetch(imageData)
-            .then((res) => res.blob())
-            .then((blob) => {
-                const file = new File([blob], `${field}.jpg`, {
-                    type: "image/jpeg",
-                });
-                handleFileUpload(field, file);
-                setShowCamera({});
-            });
+        // For camera captures, the imageData is already a data URL
+        try {
+            setIsProcessing(true);
+            setPreviews((prev) => ({ ...prev, [field]: imageData }));
+
+            // Extract base64 content and mime type from data URL
+            const matches = imageData.match(
+                /^data:([A-Za-z-+/]+);base64,(.+)$/
+            );
+
+            if (matches && matches.length === 3) {
+                const mimeType = matches[1];
+                const base64Content = matches[2];
+                debugger;
+                form.setValue(field, {
+                    content: base64Content,
+                    mime_type: mimeType,
+                } as any);
+            }
+
+            setShowCamera(false);
+        } catch (error) {
+            console.error("Error processing capture:", error);
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     const handleRemove = (field: keyof IdVerificationFormData) => {
-        form.setValue(field, undefined);
+        form.setValue(field, {
+            content: "",
+            mime_type: "",
+        } as any);
         setPreviews((prev) => {
             const newPreviews = { ...prev };
             if (newPreviews[field]) {
@@ -139,11 +189,7 @@ const IdVerificationPage = () => {
                                             type="button"
                                             variant="link"
                                             className="p-0 h-auto font-normal"
-                                            onClick={() =>
-                                                setShowCamera({
-                                                    [field]: true,
-                                                })
-                                            }
+                                            onClick={() => setShowCamera(true)}
                                         >
                                             take a photo
                                         </Button>
@@ -160,23 +206,14 @@ const IdVerificationPage = () => {
 
     return (
         <div className="flex flex-col justify-between w-full h-full">
-            {(showCamera.governmentIdFront || showCamera.governmentIdBack) && (
+            {showCamera && (
                 <Camera
                     onCapture={(imageData) => {
-                        const field = Object.entries(showCamera).find(
-                            ([_, value]) => value
-                        )?.[0] as keyof IdVerificationFormData;
-                        if (field) {
-                            handleCapture(field, imageData);
-                        }
+                        handleCapture("governmentId", imageData);
                     }}
                     title="Photograph ID"
-                    onClose={() => setShowCamera({})}
-                    caption={
-                        showCamera.governmentIdFront
-                            ? "Photograph the front of your ID"
-                            : "Photograph the back of your ID"
-                    }
+                    onClose={() => setShowCamera(false)}
+                    caption="Photograph the front of your ID"
                 />
             )}
 
@@ -186,22 +223,20 @@ const IdVerificationPage = () => {
                     className="h-full flex flex-col justify-between"
                 >
                     <div className="space-y-8">
-                        {renderUploadField(
-                            "governmentIdFront",
-                            "Government ID (Front)"
-                        )}
-                        {renderUploadField(
+                        {renderUploadField("governmentId", "Government ID")}
+                        {/* {renderUploadField(
                             "governmentIdBack",
                             "Government ID (Back)"
-                        )}
+                        )} */}
                     </div>
                     <Button
                         type="submit"
                         className="w-full"
                         size="lg"
                         variant="neon"
+                        disabled={isProcessing}
                     >
-                        Continue
+                        {isProcessing ? "Processing..." : "Continue"}
                     </Button>
                 </form>
             </Form>
