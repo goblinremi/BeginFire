@@ -21,10 +21,6 @@ import {
 
 const labelClassName = "text-sm font-medium mb-2";
 
-interface FileWithPreview extends File {
-    preview?: string;
-}
-
 const IdVerificationPage = () => {
     const { data, updateStepData, nextStep } = useKYC();
     const [showCamera, setShowCamera] = useState<{
@@ -44,6 +40,7 @@ const IdVerificationPage = () => {
     });
 
     const onSubmit = (values: IdVerificationFormData) => {
+        debugger;
         updateStepData("idVerification", values, true);
         nextStep();
     };

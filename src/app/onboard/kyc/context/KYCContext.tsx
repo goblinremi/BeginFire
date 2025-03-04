@@ -112,14 +112,19 @@ export function KYCProvider({ children }: { children: ReactNode }) {
             },
         }));
 
-        setData((prev) => ({
-            ...prev,
-            [step]: { ...prev[step], ...stepData },
-        }));
-        debugger;
+        setData((prev) => {
+            const newData = { ...prev };
+            newData[step] = { ...prev[step], ...stepData };
+            if (step === "broker") {
+                debugger;
+                submitApplication(newData);
+            }
+            return newData;
+        });
     };
 
     const nextStep = () => {
+        debugger;
         if (currentStep < KYC_STEPS.length - 1) {
             let nextStepIndex = currentStep + 1;
 
@@ -130,10 +135,12 @@ export function KYCProvider({ children }: { children: ReactNode }) {
                 KYC_STEPS[nextStepIndex].showIf &&
                 !KYC_STEPS[nextStepIndex].showIf?.(data)
             ) {
+                debugger;
                 nextStepIndex++;
             }
 
             if (nextStepIndex < KYC_STEPS.length) {
+                debugger;
                 router.push(KYC_STEPS[nextStepIndex].path);
                 setCurrentStep(nextStepIndex);
             }
@@ -147,8 +154,9 @@ export function KYCProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const submitApplication = async () => {
+    const submitApplication = async (data: KYCData) => {
         try {
+            debugger;
             setIsSubmitting(true);
             await submitKYCApplication(data);
 
@@ -158,10 +166,12 @@ export function KYCProvider({ children }: { children: ReactNode }) {
                     "Your KYC application has been submitted successfully.",
                 duration: 5000,
             });
+            debugger;
 
             router.push("/onboard/kyc/success");
         } catch (error) {
             console.error("Error submitting application:", error);
+            debugger;
             toast({
                 title: "Submission Failed",
                 description:

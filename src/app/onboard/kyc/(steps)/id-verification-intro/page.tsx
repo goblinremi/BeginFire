@@ -1,8 +1,12 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
+import { useKYC } from "../../context/KYCContext";
 
 const IdVerificationIntroPage = () => {
+    const { nextStep } = useKYC();
+
     return (
         <div className="flex flex-col h-full justify-between">
             <div className="flex flex-col space-y-8">
@@ -56,11 +60,14 @@ const IdVerificationIntroPage = () => {
                     </div>
                 </div>
             </div>
-            <Link href="/onboard/kyc/id-verification">
-                <Button variant="neon" size="lg" className="w-full">
-                    Continue
-                </Button>
-            </Link>
+            <Button
+                onClick={() => nextStep()}
+                variant="neon"
+                size="lg"
+                className="w-full"
+            >
+                Continue
+            </Button>
         </div>
     );
 };

@@ -17,8 +17,7 @@ import { brokerFormSchema, type BrokerFormData } from "../../types";
 const labelClassName = "text-sm font-medium mb-2 text-neutral";
 
 const BrokerPage = () => {
-    const { data, updateStepData, nextStep, submitApplication, isSubmitting } =
-        useKYC();
+    const { data, updateStepData, nextStep, isSubmitting } = useKYC();
 
     const form = useForm<BrokerFormData>({
         resolver: zodResolver(brokerFormSchema),
@@ -30,8 +29,8 @@ const BrokerPage = () => {
     });
 
     const onSubmit = (values: BrokerFormData) => {
+        debugger;
         updateStepData("broker", values, true);
-        submitApplication();
     };
 
     const onError = (errors: FieldErrors<BrokerFormData>) => {
