@@ -21,6 +21,11 @@ export async function submitKYCApplication(
             broker: data.broker,
             idVerification: data.idVerification,
             affiliations: data.affiliations,
+            agreements: [] as {
+                agreement: string;
+                signed_at: string;
+                ip_address: string;
+            }[],
         };
         debugger;
 
@@ -70,6 +75,26 @@ export async function submitKYCApplication(
             throw new Error("Broker validation failed");
         }
 
+        const ipResponse = await fetch("https://api.ipify.org?format=json");
+        const { ip } = await ipResponse.json();
+        const signedAt = new Date().toISOString();
+        jsonData.agreements = [
+            {
+                agreement: "margin_agreement",
+                signed_at: signedAt,
+                ip_address: ip,
+            },
+            {
+                agreement: "account_agreement",
+                signed_at: signedAt,
+                ip_address: ip,
+            },
+            {
+                agreement: "customer_agreement",
+                signed_at: signedAt,
+                ip_address: ip,
+            },
+        ];
         formData.append("data", JSON.stringify(jsonData));
         debugger;
 

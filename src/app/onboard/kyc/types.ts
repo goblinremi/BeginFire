@@ -185,6 +185,14 @@ export const idVerificationFormSchema = z.object({
     // governmentIdBack: z.instanceof(File),
 });
 
+export const agreementsFormSchema = z.array(
+    z.object({
+        agreement: z.string(),
+        signed_at: z.string(),
+        ip_address: z.string(),
+    })
+);
+
 // export const citizenshipFormSchema = z.object({
 //     countryOfTaxResidence: z.boolean().refine((val) => val === true, {
 //         message: "You must be a US tax resident",
